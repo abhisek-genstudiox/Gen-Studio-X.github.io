@@ -1,85 +1,50 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Github, Twitter, Instagram, Facebook, Linkedin } from 'lucide-react';
+import { Github, Twitter, Instagram } from 'lucide-react';
+import { useElementOnScreen } from '@/utils/animations';
 
 const Footer: React.FC = () => {
-  const year = new Date().getFullYear();
+  const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
   
   return (
-    <footer className="bg-black pt-16 pb-8">
-      <div className="container mx-auto px-4">xw
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          <div className="md:col-span-1">
-            <h3 className="font-display text-xl font-bold mb-4 text-[#E6C88C]">GenStudioX</h3>
-            <p className="text-white/70 mb-6 max-w-xs">
-              The next generation AI platform for creative professionals.
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">
-                <Linkedin size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">
-                <Github size={20} />
-              </a>
+    <footer className="section-padding bg-black relative py-8 sm:py-12">
+      <div className="container mx-auto px-4">
+        <div 
+          ref={containerRef}
+          className={cn(
+            "max-w-7xl mx-auto",
+            "transition-all duration-700 ease-out",
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          )}
+        >
+          {/* Links and Social Icons */}
+          <div className="flex flex-col sm:flex-row justify-between gap-6 sm:gap-8 items-center">
+            {/* Social Icons - Left */}
+            <div className="flex gap-4 sm:gap-6">
+              {[Twitter, Instagram, Github].map((Icon, index) => (
+                <a 
+                  key={index}
+                  href="#" 
+                  className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300 p-2 sm:p-0"
+                  aria-label={`Social link ${index + 1}`}
+                >
+                  <Icon size={20} strokeWidth={1.5} className="sm:w-6 sm:h-6" />
+                </a>
+              ))}
             </div>
-          </div>
-          
-          <div>
-            <h4 className="font-medium text-base mb-4 text-white">Product</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Features</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Pricing</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Updates</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Beta Program</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">FAQ</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-medium text-base mb-4 text-white">Company</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">About</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Blog</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Careers</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Press</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Contact</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-medium text-base mb-4 text-white">Legal</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Privacy</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Terms</a></li>
-              <li><a href="#" className="text-white/70 hover:text-[#E6C88C] transition-colors duration-300">Security</a></li>
-            </ul>
-          </div>
-        </div>
-        
-        <div className="border-t border-white/10 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-white/60 mb-4 md:mb-0">
-            © {year} GenStudioX. All rights reserved.
-          </p>
-          
-          <div className="flex space-x-6">
-            <a href="#" className="text-sm text-white/60 hover:text-[#E6C88C] transition-colors duration-300">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-sm text-white/60 hover:text-[#E6C88C] transition-colors duration-300">
-              Terms of Service
-            </a>
-            <a href="#" className="text-sm text-white/60 hover:text-[#E6C88C] transition-colors duration-300">
-              Cookies
-            </a>
+
+            {/* Legal Links - Right */}
+            <div className="flex gap-4 sm:gap-8 text-sm sm:text-base">
+              {["Privacy", "Terms", "Security"].map((link) => (
+                <a
+                  key={link}
+                  href="#"
+                  className="text-white/70 hover:text-[#E6C88C] transition-all duration-300"
+                >
+                  {link}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
