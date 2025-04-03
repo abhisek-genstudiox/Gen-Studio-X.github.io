@@ -4,6 +4,7 @@ import { useElementOnScreen } from '@/utils/animations';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import * as HoverCard from '@radix-ui/react-hover-card';
+import { motion } from 'framer-motion';
 
 const brands = [
   { id: 1, name: 'OpenAI', image: '/brands/openAI.svg.png' },
@@ -24,8 +25,12 @@ const Testimonials: React.FC = () => {
   return (
     <section id="testimonials" className="section-padding bg-black relative overflow-hidden py-8 sm:py-12 md:py-16">
       <div className="container mx-auto px-4">
-        <div 
+        <motion.div 
           ref={containerRef}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
           className={cn(
             "max-w-2xl mx-auto text-center mb-8 sm:mb-12 md:mb-16 transition-all duration-700 ease-out text-white",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -37,7 +42,7 @@ const Testimonials: React.FC = () => {
           <p className="text-base sm:text-lg text-white/70 px-4 font-display">
             Integrating the most advanced AI platforms for creative excellence
           </p>
-        </div>
+        </motion.div>
         
         <ScrollArea.Root className="max-w-full mx-auto overflow-hidden">
           <ScrollArea.Viewport className="w-full h-full">
@@ -45,24 +50,35 @@ const Testimonials: React.FC = () => {
               {[...brands, ...brands].map((brand, index) => (
                 <HoverCard.Root key={`${brand.id}-${index}`}>
                   <HoverCard.Trigger asChild>
-                    <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-2 sm:mx-3 md:mx-4 p-2 sm:p-3 md:p-4 flex items-center justify-center transition-all duration-300 hover:scale-105">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-2 sm:mx-3 md:mx-4 p-2 sm:p-3 md:p-4 flex items-center justify-center transition-all duration-300 hover:scale-105"
+                    >
                       <AspectRatio.Root ratio={1}>
-                        <img 
+                        <motion.img 
                           src={brand.image}
                           alt={`${brand.name} logo`}
                           className="w-full h-full object-contain filter brightness-0 invert hover:brightness-0 hover:invert"
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.3 }}
                         />
                       </AspectRatio.Root>
-                    </div>
+                    </motion.div>
                   </HoverCard.Trigger>
                   <HoverCard.Portal>
                     <HoverCard.Content
                       className="bg-white/10 p-4 rounded-lg shadow-lg backdrop-blur-sm"
                       sideOffset={5}
                     >
-                      <div className="text-white text-sm font-medium font-display">
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-white text-sm font-medium font-display"
+                      >
                         {brand.name}
-                      </div>
+                      </motion.div>
                       <HoverCard.Arrow className="fill-white/10" />
                     </HoverCard.Content>
                   </HoverCard.Portal>
