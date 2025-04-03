@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  const navItems = ['Content Studio Suite'];
+  const navItems = ['Managed Services', 'Content Studio Suite'];
   
   return (
     <motion.header 
