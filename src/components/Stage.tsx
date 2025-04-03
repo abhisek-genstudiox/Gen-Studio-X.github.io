@@ -1,14 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useElementOnScreen } from '@/utils/animations';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { throttle } from 'lodash';
 
-const steps = [
+interface StepDescription {
+  heading: string;
+  paragraph: string;
+  image: string;
+}
+
+interface Step {
+  number: string;
+  title: string;
+  description: StepDescription;
+  delay: number;
+}
+
+const steps: Step[] = [
   {
     number: "Stage #1",
     title: "Get Set Start",
     description: {
       heading: "Intelligent sourcing agents for your daily needs",
-      paragraph: "The AI Revolution is here—but most brands struggle to bring it all together. A big hurdle is sourcing amazing content ideas on a regular basis. With the  help of our custom AI sourcing agent, we blend your brand values with trending signals.",
+      paragraph: "The AI Revolution is here—but most brands struggle to bring it all together. A big hurdle is sourcing amazing content ideas on a regular basis. With the help of our custom AI sourcing agent, we blend your brand values with trending signals.",
       image: "/stage1.png"
     },
     delay: 100
@@ -45,32 +62,125 @@ const steps = [
   }
 ];
 
+const TimelineDot: React.FC<{ isActive: boolean }> = React.memo(({ isActive }) => (
+  <Button
+    variant="outline"
+    size="icon"
+    className={cn(
+      "w-8 h-8 rounded-full border-2 border-[#E6C88C] relative z-10 transition-all duration-300",
+      isActive ? "bg-[#E6C88C] shadow-[0_0_15px_rgba(230,200,140,0.4)]" : ""
+    )}
+    aria-label="Timeline indicator"
+  />
+));
+
+const StageCard: React.FC<{ step: Step; index: number; scrollProgress: number }> = React.memo(({ step, index, scrollProgress }) => {
+  const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
+  
+  return (
+    <Card
+      ref={containerRef}
+      className={cn(
+        "grid grid-cols-1 md:grid-cols-[0.5fr,auto,1fr] items-start md:items-center gap-6 transition-all duration-700 ease-out text-white bg-transparent border-none",
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
+        `delay-${step.delay}`
+      )}
+    >
+      <CardHeader className="text-left md:text-right p-0 space-y-1">
+        <div className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-[#E6C88C]">
+          {step.number}
+        </div>
+        <CardTitle className="text-2xl md:text-3xl lg:text-4xl font-display font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+          {step.title}
+        </CardTitle>
+      </CardHeader>
+
+      <div className="justify-self-start md:justify-self-center">
+        <TimelineDot isActive={scrollProgress * 100 >= index * 25} />
+      </div>
+      
+      <CardContent className="p-0 space-y-4">
+        <h4 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold bg-gradient-to-r from-[#E6C88C] to-white bg-clip-text text-transparent">
+          {step.description.heading}
+        </h4>
+        <p className="text-base text-white/70 font-display">{step.description.paragraph}</p>
+        <img 
+          src={step.description.image} 
+          alt={step.title} 
+          className="w-full max-w-[600px] mr-auto rounded-lg"
+          loading="lazy"
+          width={600}
+          height={400}
+        />
+      </CardContent>
+    </Card>
+  );
+});
+
+const TimelineLine: React.FC<{ progress: number }> = React.memo(({ progress }) => (
+  <div className="hidden md:block absolute left-[34%] top-0 bottom-[120px] w-1">
+    <div className="absolute inset-0 bg-white/20"></div>
+    <div 
+      className="absolute inset-0 bg-gradient-to-b from-[#E6C88C]/80 to-[#E6C88C]/20 transition-all duration-300"
+      style={{
+        height: `${progress * 100}%`,
+        boxShadow: '0 0 15px rgba(230, 200, 140, 0.7), 0 0 30px rgba(230, 200, 140, 0.5), 0 0 45px rgba(230, 200, 140, 0.3)',
+        transform: 'translateX(-50%)',
+        left: '50%'
+      }}
+      role="progressbar"
+      aria-valuenow={Math.round(progress * 100)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    />
+  </div>
+));
+
 const Stage: React.FC = () => {
   const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
+  const handleScroll = useCallback(
+    throttle(() => {
       const element = document.getElementById('stage');
       if (element) {
         const rect = element.getBoundingClientRect();
         const windowHeight = window.innerHeight;
         const elementTop = rect.top;
         
-        // Updated progress calculation to reach center of screen
         let progress = (windowHeight/2 - elementTop) / (rect.height - windowHeight/2);
         progress = Math.min(Math.max(progress, 0), 1);
         
         setScrollProgress(progress);
       }
-    };
+    }, 100),
+    []
+  );
 
-    window.addEventListener('scroll', handleScroll);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [handleScroll]);
+
+  const memoizedSteps = useMemo(() => 
+    steps.map((step, index) => (
+      <StageCard
+        key={step.number}
+        step={step}
+        index={index}
+        scrollProgress={scrollProgress}
+      />
+    )),
+    [scrollProgress]
+  );
 
   return (
-    <section id="stage" className="section-padding bg-black px-4 sm:px-6 lg:px-8">
+    <section 
+      id="stage" 
+      className="section-padding bg-black px-4 sm:px-6 lg:px-8"
+      role="region"
+      aria-label="Our Process"
+    >
       <div className="container mx-auto">
         <div 
           ref={containerRef}
@@ -80,82 +190,26 @@ const Stage: React.FC = () => {
           )}
         >
           <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+            Our Process
           </h2>
-          <p className="text-lg text-white/70">
+          <p className="text-lg text-white/70 font-display">
+            A seamless journey from ideation to execution
           </p>
         </div>
         
         <div className="relative">
-          {/* Timeline Line */}
-          <div className="hidden md:block absolute left-[34%] top-0 bottom-[120px] w-1">
-            {/* Background line */}
-            <div className="absolute inset-0 bg-white/20"></div>
-            {/* Glowing line overlay */}
-            <div 
-              className="absolute inset-0 bg-gradient-to-b from-[#E6C88C]/80 to-[#E6C88C]/20 transition-all duration-300"
-              style={{
-                height: `${scrollProgress * 100}%`,
-                boxShadow: '0 0 15px rgba(230, 200, 140, 0.7), 0 0 30px rgba(230, 200, 140, 0.5), 0 0 45px rgba(230, 200, 140, 0.3)',
-                transform: 'translateX(-50%)',
-                left: '50%'
-              }}
-            ></div>
-          </div>
+          <TimelineLine progress={scrollProgress} />
           
           <div className="space-y-16 sm:space-y-24 md:space-y-36 relative">
-            {steps.map((step, index) => {
-              const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
-              
-              return (
-                <div 
-                  key={index}
-                  ref={containerRef}
-                  className={cn(
-                    "grid grid-cols-1 md:grid-cols-[0.5fr,auto,1fr] items-start md:items-center gap-4 sm:gap-6 transition-all duration-700 ease-out text-white",
-                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
-                    `delay-[${step.delay}ms]`
-                  )}
-                >
-                  <div className="text-left md:text-right">
-                    <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-bold mb-1 sm:mb-2 block bg-gradient-to-r from-[#E6C88C] to-[#E6C88C] bg-clip-text text-transparent">
-                      {step.number}
-                    </span>
-                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-                      {step.title}
-                    </h3>
-                  </div>
+            {memoizedSteps}
 
-                  <div className="justify-self-start md:justify-self-center">
-                    <div 
-                      className={cn(
-                        "w-8 h-8 bg-black rounded-full border-2 border-[#E6C88C] flex items-center justify-center relative z-10 transition-all duration-300",
-                        scrollProgress * 100 >= index * 25 ? "bg-[#E6C88C] shadow-[0_0_15px_rgba(230,200,140,0.4)]" : ""
-                      )}
-                    >
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-3 sm:mb-4 bg-gradient-to-r from-[#E6C88C] to-white bg-clip-text text-transparent">
-                      {step.description.heading}
-                    </h4>
-                    <p className="text-sm sm:text-base text-white/70 mb-4">{step.description.paragraph}</p>
-                    <img 
-                      src={step.description.image} 
-                      alt={step.title} 
-                      className="w-full max-w-[600px] mr-auto rounded-lg"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-              );
-            })}
-
-            <div className="max-w-full mx-auto mt-16 sm:mt-24">
-              <p className="text-xl sm:text-2xl md:text-3xl text-white/70 px-0 text-left">
-                Skip the complexity—focus on creating. Let Gen Studio X handle the ideation and AI integrations, so you can focus on the more important things.
-              </p>
-            </div>
+            <Card className="max-w-full mx-auto mt-16 sm:mt-24 bg-transparent border-none">
+              <CardContent className="p-0">
+                <p className="text-xl sm:text-2xl md:text-3xl text-white/70 px-0 text-left font-display">
+                  Skip the complexity—focus on creating. Let Gen Studio X handle the ideation and AI integrations, so you can focus on the more important things.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
@@ -163,4 +217,4 @@ const Stage: React.FC = () => {
   );
 };
 
-export default Stage;
+export default React.memo(Stage);
