@@ -113,7 +113,7 @@ const FeatureCard: React.FC<{ feature: Feature; index: number }> = ({ feature, i
     whileInView="visible"
     viewport={{ once: true }}
     custom={index * 0.1}
-    className="bg-black/50 p-3 sm:p-4 rounded-xl border border-[#E6C88C]/20 hover:border-[#E6C88C]/40 transition-all duration-200 backdrop-blur-md h-full flex flex-col"
+    className="bg-black/50 p-3 sm:p-4 rounded-xl border border-transparent transition-all duration-200 backdrop-blur-md h-full flex flex-col"
   >
     <div className="text-3xl sm:text-4xl md:text-5xl mb-2" aria-hidden="true">
       {feature.icon}
@@ -143,7 +143,7 @@ const WorkflowCard: React.FC<{ step: WorkflowStep; index: number }> = ({ step, i
       className={`w-full flex ${isLeft ? 'justify-start' : 'justify-end'}`}
     >
       <div className={`w-full md:w-3/4 ${isLeft ? 'text-right' : 'text-left'}`}>
-        <div className="bg-black/50 p-3 sm:p-4 rounded-xl border border-[#E6C88C]/20 hover:border-[#E6C88C]/40 transition-all duration-200 backdrop-blur-md inline-block w-full">
+        <div className="bg-black/50 p-3 sm:p-4 rounded-xl border border-transparent transition-all duration-200 backdrop-blur-md inline-block w-full">
           <div className="flex items-center justify-between flex-col sm:flex-row gap-2">
             {isLeft ? (
               <>
@@ -179,6 +179,7 @@ const WorkflowCard: React.FC<{ step: WorkflowStep; index: number }> = ({ step, i
     </motion.div>
   );
 };
+
 
 const HeroSection: React.FC<{ containerRef: React.RefObject<HTMLDivElement>; isVisible: boolean; }> = ({ containerRef, isVisible }) => (
   <section className="relative overflow-hidden py-10 sm:py-12 md:py-14 lg:py-16" role="banner">
