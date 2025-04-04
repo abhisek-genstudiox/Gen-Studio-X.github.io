@@ -11,24 +11,74 @@ const ContentStudio: React.FC = () => {
 
   const features = [
     {
-      title: "AI-Powered Content Creation",
-      description: "Generate high-quality content using cutting-edge AI models",
-      icon: "✨"
+      title: "Social Media Trend Analysis",
+      description: "Stay ahead with real-time insights and data-driven decisions",
+      icon: "📊"
     },
     {
-      title: "Multi-Format Support",
-      description: "Create content in various formats including text, images, and videos",
+      title: "AI-Powered Idea Generator",
+      description: "Discover fresh, unique ideas tailored to your brand",
+      icon: "💡"
+    },
+    {
+      title: "Story & Script Development",
+      description: "Transform ideas into compelling narratives and scripts",
+      icon: "📝"
+    },
+    {
+      title: "Content Expansion Tools",
+      description: "Generate text, images, and videos with integrated editing",
       icon: "🎨"
     },
     {
-      title: "Collaborative Workspace",
-      description: "Work seamlessly with your team in real-time",
-      icon: "👥"
+      title: "Marketing Optimization",
+      description: "Customize content and track performance metrics",
+      icon: "📈"
+    }
+  ];
+
+  const workflowSteps = [
+    {
+      title: "Trend Research",
+      description: "Analyze current social media trends and audience preferences using AI-powered insights",
+      icon: "🔍",
+      color: "#FF6B6B",
+      gradient: "from-red-500/20 to-transparent"
     },
     {
-      title: "Content Analytics",
-      description: "Track performance and optimize your content strategy",
-      icon: "📊"
+      title: "Idea Generation",
+      description: "Get AI-powered creative suggestions tailored to your brand and target audience",
+      icon: "💭",
+      color: "#4ECDC4",
+      gradient: "from-teal-500/20 to-transparent"
+    },
+    {
+      title: "Story Creation",
+      description: "Develop engaging narratives with AI assistance for maximum impact",
+      icon: "📖",
+      color: "#45B7D1",
+      gradient: "from-blue-500/20 to-transparent"
+    },
+    {
+      title: "Script Development",
+      description: "Transform stories into structured scripts optimized for different platforms",
+      icon: "🎬",
+      color: "#96CEB4",
+      gradient: "from-green-500/20 to-transparent"
+    },
+    {
+      title: "Content Expansion",
+      description: "Enhance with rich media content using our integrated AI tools",
+      icon: "✨",
+      color: "#FFEEAD",
+      gradient: "from-yellow-500/20 to-transparent"
+    },
+    {
+      title: "Publish & Optimize",
+      description: "Deploy content and monitor performance with real-time analytics",
+      icon: "🚀",
+      color: "#D4A5A5",
+      gradient: "from-pink-500/20 to-transparent"
     }
   ];
 
@@ -93,10 +143,10 @@ const ContentStudio: React.FC = () => {
                 )}
               >
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-4 sm:mb-6 text-[#E6C88C]">
-                  Content Studio Suite
+                  AI Creative Suite
                 </h1>
                 <p className="text-base sm:text-lg md:text-xl text-white/70 mb-6 sm:mb-8 font-display max-w-2xl mx-auto">
-                  Your all-in-one platform for creating, managing, and optimizing content
+                  Transform ideas into captivating, trend-driven content with our AI-powered platform
                 </p>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -116,7 +166,7 @@ const ContentStudio: React.FC = () => {
           {/* Features Section */}
           <section className="section-padding relative pb-12 sm:pb-16 md:pb-20">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {features.map((feature, index) => (
                   <motion.div
                     key={index}
@@ -135,6 +185,90 @@ const ContentStudio: React.FC = () => {
                     </p>
                   </motion.div>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Workflow Section */}
+          <section className="section-padding relative py-16 sm:py-20 md:py-24">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                className="text-center mb-16"
+              >
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold text-[#E6C88C] mb-6">
+                  How It Works
+                </h2>
+                <p className="text-xl text-white/70 font-display max-w-2xl mx-auto">
+                  Our streamlined process helps you create engaging content from start to finish
+                </p>
+              </motion.div>
+              
+              <div className="relative">
+                {/* Background elements */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#E6C88C]/5 rounded-full blur-3xl" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {workflowSteps.map((step, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      className="group"
+                    >
+                      <div className={cn(
+                        "h-full bg-gradient-to-br from-[#E6C88C]/5 to-transparent p-6 rounded-2xl border border-[#E6C88C]/10",
+                        "hover:border-[#E6C88C]/30 hover:shadow-lg hover:shadow-[#E6C88C]/5",
+                        "transition-all duration-300 backdrop-blur-sm",
+                        "relative overflow-hidden"
+                      )}>
+                        {/* Gradient background */}
+                        <div className={cn(
+                          "absolute inset-0 bg-gradient-to-br",
+                          step.gradient,
+                          "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        )} />
+                        
+                        {/* Content */}
+                        <div className="relative z-10">
+                          <div className="flex items-start gap-6">
+                            <div 
+                              className={cn(
+                                "text-4xl p-4 rounded-xl",
+                                "transition-transform duration-300 group-hover:scale-110",
+                                "shadow-lg shadow-black/10"
+                              )}
+                              style={{ backgroundColor: `${step.color}20` }}
+                            >
+                              {step.icon}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-sm font-medium text-[#E6C88C]">
+                                  Step {index + 1}
+                                </span>
+                                <div className="h-px flex-1 bg-[#E6C88C]/20" />
+                              </div>
+                              <h3 className="text-2xl font-display font-bold text-[#E6C88C] mb-3">
+                                {step.title}
+                              </h3>
+                              <p className="text-base text-white/70 font-display leading-relaxed">
+                                {step.description}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
