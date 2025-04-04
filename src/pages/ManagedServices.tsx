@@ -6,108 +6,124 @@ import Navbar from '@/components/Navbar';
 import AnimatedGradient from '@/components/AnimatedGradient';
 import { Helmet } from 'react-helmet';
 
+// Animation Variants
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const ManagedServices: React.FC = () => {
   const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
 
+  // Data for sections
   const services = [
     {
       title: "Workflow Analysis & Planning",
-      description: "Evaluate your current processes to identify areas for improvement and innovation",
-      icon: "📊"
+      description:
+        "Evaluate your current processes to pinpoint growth opportunities and drive innovation.",
+      icon: "📊",
     },
     {
       title: "Custom Workflow Design",
-      description: "Develop tailor-made solutions that integrate technical efficiency with creative flair",
-      icon: "🎨"
+      description:
+        "Craft tailor-made solutions that blend technical efficiency with creative brilliance.",
+      icon: "🎨",
     },
     {
       title: "Seamless Implementation",
-      description: "Execute and integrate new workflows with minimal disruption",
-      icon: "⚡"
+      description:
+        "Deploy and integrate new workflows with lightning-fast precision.",
+      icon: "⚡",
     },
     {
       title: "Ongoing Optimization & Support",
-      description: "Provide continuous monitoring and refinement to keep your workflows cutting-edge",
-      icon: "🛡️"
-    }
+      description:
+        "Experience continuous enhancements with our dedicated support team.",
+      icon: "🛡️",
+    },
   ];
 
   const expertise = [
     {
       title: "Technical Mastery",
-      description: "Harnessing the latest technologies to automate, integrate, and streamline operations",
+      description:
+        "Leveraging cutting-edge tech to automate and streamline your operations.",
       icon: "💻",
       color: "#FF6B6B",
-      gradient: "from-red-500/20 to-transparent"
     },
     {
       title: "Creative Vision",
-      description: "Developing strategies and content that engage and inspire your audience",
+      description:
+        "Crafting strategies and content that captivate and inspire.",
       icon: "🎯",
       color: "#4ECDC4",
-      gradient: "from-teal-500/20 to-transparent"
     },
     {
       title: "Innovative Solutions",
-      description: "Combining technical innovation with creative strategy to supercharge your processes",
+      description:
+        "Merging technology and creativity to supercharge your processes.",
       icon: "✨",
       color: "#45B7D1",
-      gradient: "from-blue-500/20 to-transparent"
-    }
+    },
   ];
 
   const workflowSteps = [
     {
       title: "Consultation & Assessment",
-      description: "We start by understanding your unique business challenges and existing workflows",
+      description:
+        "We start by diving deep into your challenges and current workflows.",
       icon: "🤝",
       color: "#FF6B6B",
-      gradient: "from-red-500/20 to-transparent"
     },
     {
       title: "Customized Strategy",
-      description: "Our experts craft a personalized plan that aligns with your business goals",
+      description:
+        "Our experts design a bespoke plan perfectly aligned with your goals.",
       icon: "📋",
       color: "#4ECDC4",
-      gradient: "from-teal-500/20 to-transparent"
     },
     {
       title: "Expert Implementation",
-      description: "Our technical and creative teams work together to bring your vision to life",
+      description:
+        "Our tech and creative teams unite to bring your vision to life.",
       icon: "🚀",
       color: "#45B7D1",
-      gradient: "from-blue-500/20 to-transparent"
     },
     {
       title: "Continuous Improvement",
-      description: "We monitor performance and fine-tune your workflows for sustained success",
+      description:
+        "We keep optimizing and fine-tuning to ensure lasting success.",
       icon: "📈",
       color: "#96CEB4",
-      gradient: "from-green-500/20 to-transparent"
-    }
+    },
   ];
 
   const benefits = [
     {
       title: "Enhanced Efficiency",
-      description: "Reduce manual tasks and streamline operations for faster turnaround times",
-      icon: "⚡"
+      description: "Streamline operations and eliminate redundant tasks.",
+      icon: "⚡",
     },
     {
       title: "Increased Innovation",
-      description: "Leverage our creative insights to keep your brand ahead of the curve",
-      icon: "💡"
+      description: "Stay ahead with creative insights that elevate your brand.",
+      icon: "💡",
     },
     {
       title: "Scalable Solutions",
-      description: "Grow your capabilities with workflows designed to evolve with your business",
-      icon: "📈"
+      description: "Expand your capabilities with workflows that grow with you.",
+      icon: "📈",
     },
     {
       title: "Dedicated Support",
-      description: "Enjoy ongoing access to a team of experts committed to your success",
-      icon: "🤝"
-    }
+      description: "Access a team of experts devoted to your long-term success.",
+      icon: "🤝",
+    },
   ];
 
   return (
@@ -119,35 +135,22 @@ const ManagedServices: React.FC = () => {
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </Helmet>
       <motion.div 
-        className="relative bg-black min-h-screen"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        className="relative bg-black min-h-screen overflow-hidden"
+        initial="hidden"
+        animate="visible"
+        variants={fadeIn}
         transition={{ duration: 0.5 }}
       >
+        {/* Safari Safe-Area Styles */}
         <style>
           {`
             @supports (-webkit-touch-callout: none) {
-              body {
-                background-color: #000000;
+              body { background-color: #000000; }
+              .safari-top-bar, .safari-bottom-bar {
+                position: fixed; left: 0; right: 0; background-color: #000000; z-index: 9999;
               }
-              .safari-top-bar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: env(safe-area-inset-top);
-                background-color: #000000;
-                z-index: 9999;
-              }
-              .safari-bottom-bar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: env(safe-area-inset-bottom);
-                background-color: #000000;
-                z-index: 9999;
-              }
+              .safari-top-bar { top: 0; height: env(safe-area-inset-top); }
+              .safari-bottom-bar { bottom: 0; height: env(safe-area-inset-bottom); }
             }
           `}
         </style>
@@ -155,63 +158,81 @@ const ManagedServices: React.FC = () => {
         <div className="safari-bottom-bar" />
         <AnimatedGradient />
         <Navbar />
-        
+
         <main className="relative z-10 bg-black">
           {/* Hero Section */}
-          <section className="section-padding relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <section className="section-padding relative py-16 md:py-24 text-center">
+            <div className="container mx-auto px-4 relative z-20">
               <motion.div 
                 ref={containerRef}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                variants={fadeInUp}
+                initial="hidden"
+                animate={isVisible ? "visible" : "hidden"}
                 transition={{ duration: 0.8 }}
-                className={cn(
-                  "max-w-4xl mx-auto text-center",
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                )}
+                className={cn("max-w-3xl mx-auto", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10")}
               >
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-4 sm:mb-6 text-[#E6C88C]">
-                  Managed Service
+                <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white drop-shadow-lg tracking-tight">
+                  Managed Services
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl text-white/70 mb-6 sm:mb-8 font-display max-w-2xl mx-auto">
-                  Where our in-house technical and creative expertise transforms your workflows into powerful, growth-driving systems
+                <p className="text-lg md:text-2xl text-gray-300 mb-8">
+                  Transforming your workflows into masterpieces with technical and creative genius.
                 </p>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <a
                     href="/contact"
-                    className="inline-block bg-[#E6C88C] text-black px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-display font-medium shadow-lg shadow-[#E6C88C]/20 hover:bg-[#E6C88C]/90 transition-colors duration-300 text-sm sm:text-base"
+                    className="inline-block bg-gradient-to-r from-[#E6C88C] to-white text-black px-8 py-4 rounded-full font-medium shadow-2xl transition-all duration-300"
                   >
                     Contact Us Today
                   </a>
                 </motion.div>
               </motion.div>
             </div>
+            {/* Animated SVG Overlay */}
+            <div className="absolute inset-0 z-10 pointer-events-none">
+              <svg className="absolute bottom-0 left-0 w-full h-40 opacity-50" viewBox="0 0 1000 100" preserveAspectRatio="none">
+                <path d="M0,0 C150,100 350,0 500,100 C650,200 850,100 1000,150 L1000,0 L0,0 Z" fill="url(#gradientWave)" />
+                <defs>
+                  <linearGradient id="gradientWave" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#E6C88C" />
+                    <stop offset="100%" stopColor="white" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
           </section>
 
-          {/* Services Section */}
-          <section className="section-padding relative pb-12 sm:pb-16 md:pb-20">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-[#E6C88C] mb-8 text-center">
+          {/* What We Do */}
+          <section className="section-padding relative py-16 md:py-24">
+            <div className="container mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white drop-shadow tracking-wide">
                 What We Do
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              <div className="flex flex-wrap justify-center gap-8">
                 {services.map((service, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    className="max-w-sm w-full p-6 rounded-3xl bg-black bg-opacity-50 backdrop-blur-xl shadow-2xl transition transform hover:-translate-y-3 hover:scale-105 relative overflow-hidden"
+                    variants={fadeInUp}
+                    initial="hidden"
+                    whileInView="visible"
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="bg-gradient-to-br from-[#E6C88C]/10 to-transparent p-4 sm:p-6 rounded-xl border border-[#E6C88C]/20 hover:border-[#E6C88C]/40 transition-all duration-300 backdrop-blur-sm"
                   >
-                    <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{service.icon}</div>
-                    <h3 className="text-lg sm:text-xl font-display font-bold text-[#E6C88C] mb-2">
+                    {/* Animated Background */}
+                    <div className="absolute inset-0 -z-10">
+                      <motion.div
+                        className="w-full h-full"
+                        initial={{ scale: 1.2 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 2, repeat: Infinity, repeatType: "mirror" }}
+                        style={{ background: "radial-gradient(circle at top left, rgba(230,200,140,0.2), transparent)" }}
+                      />
+                    </div>
+                    <div className="text-5xl mb-4">{service.icon}</div>
+                    <h3 className="text-2xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white">
                       {service.title}
                     </h3>
-                    <p className="text-sm sm:text-base text-white/70 font-display">
+                    <p className="text-md text-gray-300">
                       {service.description}
                     </p>
                   </motion.div>
@@ -220,145 +241,122 @@ const ManagedServices: React.FC = () => {
             </div>
           </section>
 
-          {/* Expertise Section */}
-          <section className="section-padding relative py-12 sm:py-16 md:py-20">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-[#E6C88C] mb-8 text-center">
+          {/* Our Expertise */}
+          <section className="section-padding relative py-16 md:py-24 bg-gray-900 bg-opacity-30">
+            <div className="container mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white drop-shadow tracking-wide">
                 Our Expertise
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="relative flex flex-wrap justify-center gap-8">
                 {expertise.map((item, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="relative max-w-sm w-full p-6 rounded-3xl bg-black bg-opacity-60 backdrop-blur-lg shadow-xl transition transform hover:-translate-y-2 hover:scale-105 overflow-hidden"
+                    variants={fadeInUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    transition={{ duration: 0.6, delay: index * 0.15 }}
                     viewport={{ once: true }}
-                    className="group"
                   >
-                    <div className={cn(
-                      "h-full bg-gradient-to-br from-[#E6C88C]/5 to-transparent p-6 rounded-2xl border border-[#E6C88C]/10",
-                      "hover:border-[#E6C88C]/30 hover:shadow-lg hover:shadow-[#E6C88C]/5",
-                      "transition-all duration-300 backdrop-blur-sm",
-                      "relative overflow-hidden"
-                    )}>
-                      <div className={cn(
-                        "absolute inset-0 bg-gradient-to-br",
-                        item.gradient,
-                        "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      )} />
-                      <div className="relative z-10">
-                        <div className="flex items-start gap-6">
-                          <div 
-                            className={cn(
-                              "text-4xl p-4 rounded-xl",
-                              "transition-transform duration-300 group-hover:scale-110",
-                              "shadow-lg shadow-black/10"
-                            )}
-                            style={{ backgroundColor: `${item.color}20` }}
-                          >
-                            {item.icon}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-2xl font-display font-bold text-[#E6C88C] mb-3">
-                              {item.title}
-                            </h3>
-                            <p className="text-base text-white/70 font-display leading-relaxed">
-                              {item.description}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                    {/* Subtle Static Gradient Background */}
+                    <div className="absolute inset-0 -z-10 bg-gradient-to-br from-black to-transparent" style={{ opacity: 0.5 }} />
+                    <div className="flex items-center gap-4 mb-4">
+                      <motion.div 
+                        className="text-5xl p-4 rounded-full shadow-md" 
+                        style={{ backgroundColor: `${item.color}20` }}
+                        whileHover={{ rotate: 10 }}
+                      >
+                        {item.icon}
+                      </motion.div>
+                      <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white">
+                        {item.title}
+                      </h3>
                     </div>
+                    <p className="text-md text-gray-300">
+                      {item.description}
+                    </p>
                   </motion.div>
                 ))}
               </div>
             </div>
           </section>
 
-          {/* Workflow Section */}
-          <section className="section-padding relative py-12 sm:py-16 md:py-20">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-[#E6C88C] mb-8 text-center">
+          {/* How It Works */}
+          <section className="section-padding relative py-16 md:py-24">
+            <div className="container mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white drop-shadow tracking-wide">
                 How It Works
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {workflowSteps.map((step, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="group"
-                  >
-                    <div className={cn(
-                      "h-full bg-gradient-to-br from-[#E6C88C]/5 to-transparent p-6 rounded-2xl border border-[#E6C88C]/10",
-                      "hover:border-[#E6C88C]/30 hover:shadow-lg hover:shadow-[#E6C88C]/5",
-                      "transition-all duration-300 backdrop-blur-sm",
-                      "relative overflow-hidden"
-                    )}>
-                      <div className={cn(
-                        "absolute inset-0 bg-gradient-to-br",
-                        step.gradient,
-                        "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      )} />
-                      <div className="relative z-10">
-                        <div className="flex items-start gap-6">
-                          <div 
-                            className={cn(
-                              "text-4xl p-4 rounded-xl",
-                              "transition-transform duration-300 group-hover:scale-110",
-                              "shadow-lg shadow-black/10"
-                            )}
-                            style={{ backgroundColor: `${step.color}20` }}
-                          >
-                            {step.icon}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="text-sm font-medium text-[#E6C88C]">
-                                Step {index + 1}
-                              </span>
-                              <div className="h-px flex-1 bg-[#E6C88C]/20" />
-                            </div>
-                            <h3 className="text-2xl font-display font-bold text-[#E6C88C] mb-3">
-                              {step.title}
-                            </h3>
-                            <p className="text-base text-white/70 font-display leading-relaxed">
-                              {step.description}
-                            </p>
-                          </div>
-                        </div>
+              <div className="relative">
+                <div className="space-y-12">
+                  {workflowSteps.map((step, index) => (
+                    <motion.div
+                      key={index}
+                      className="relative flex flex-col md:flex-row items-center md:items-start"
+                      variants={fadeInUp}
+                      initial="hidden"
+                      whileInView="visible"
+                      transition={{ duration: 0.6, delay: index * 0.2 }}
+                      viewport={{ once: true }}
+                    >
+                      <div className="z-10 flex-shrink-0 w-12 h-12 rounded-full bg-black bg-opacity-70 flex items-center justify-center border border-[#E6C88C]/40 shadow-xl">
+                        {step.icon}
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+                      <div className="mt-4 md:mt-0 md:ml-8 p-6 rounded-3xl bg-black bg-opacity-50 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+                        <div className="absolute inset-0 -z-10">
+                          <motion.div
+                            className="w-full h-full"
+                            initial={{ opacity: 0.8 }}
+                            animate={{ opacity: 0.4 }}
+                            transition={{ duration: 2, repeat: Infinity, repeatType: "mirror" }}
+                            style={{ background: `linear-gradient(135deg, ${step.color}30, transparent)` }}
+                          />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white">
+                          {step.title}
+                        </h3>
+                        <p className="text-md text-gray-300">
+                          {step.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Benefits Section */}
-          <section className="section-padding relative py-12 sm:py-16 md:py-20">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-[#E6C88C] mb-8 text-center">
+          {/* Benefits */}
+          <section className="section-padding relative py-16 md:py-24 bg-gray-900 bg-opacity-30">
+            <div className="container mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white drop-shadow tracking-wide">
                 Benefits
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {benefits.map((benefit, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    className="p-6 rounded-3xl bg-black bg-opacity-50 backdrop-blur-xl shadow-2xl transition transform hover:-translate-y-3 hover:scale-105 relative overflow-hidden"
+                    variants={fadeInUp}
+                    initial="hidden"
+                    whileInView="visible"
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="bg-gradient-to-br from-[#E6C88C]/10 to-transparent p-4 sm:p-6 rounded-xl border border-[#E6C88C]/20 hover:border-[#E6C88C]/40 transition-all duration-300 backdrop-blur-sm"
                   >
-                    <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{benefit.icon}</div>
-                    <h3 className="text-lg sm:text-xl font-display font-bold text-[#E6C88C] mb-2">
+                    <div className="absolute inset-0 -z-10">
+                      <motion.div
+                        className="w-full h-full"
+                        initial={{ opacity: 0.5 }}
+                        animate={{ opacity: 0.2 }}
+                        transition={{ duration: 2, repeat: Infinity, repeatType: "mirror" }}
+                        style={{ background: "radial-gradient(circle at center, rgba(230,200,140,0.2), transparent)" }}
+                      />
+                    </div>
+                    <div className="text-5xl mb-4">{benefit.icon}</div>
+                    <h3 className="text-2xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white">
                       {benefit.title}
                     </h3>
-                    <p className="text-sm sm:text-base text-white/70 font-display">
+                    <p className="text-md text-gray-300">
                       {benefit.description}
                     </p>
                   </motion.div>
@@ -367,29 +365,26 @@ const ManagedServices: React.FC = () => {
             </div>
           </section>
 
-          {/* CTA Section */}
-          <section className="section-padding relative py-12 sm:py-16 md:py-20">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Call-To-Action */}
+          <section className="section-padding relative py-16 md:py-24">
+            <div className="container mx-auto px-4 text-center">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                variants={fadeInUp}
+                initial="hidden"
+                whileInView="visible"
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
-                className="text-center"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-[#E6C88C] mb-6">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#E6C88C] to-white drop-shadow tracking-wide">
                   Ready to Transform Your Workflows?
                 </h2>
-                <p className="text-lg text-white/70 font-display mb-8 max-w-2xl mx-auto">
-                  Contact us today to schedule your consultation and discover how we can help you achieve operational excellence.
+                <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                  Schedule your consultation today and let us supercharge your operations.
                 </p>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <a
                     href="/contact"
-                    className="inline-block bg-[#E6C88C] text-black px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-display font-medium shadow-lg shadow-[#E6C88C]/20 hover:bg-[#E6C88C]/90 transition-colors duration-300 text-sm sm:text-base"
+                    className="inline-block bg-gradient-to-r from-[#E6C88C] to-white text-black px-8 py-4 rounded-full font-medium shadow-2xl transition-all duration-300"
                   >
                     Get Started
                   </a>
@@ -403,4 +398,4 @@ const ManagedServices: React.FC = () => {
   );
 };
 
-export default ManagedServices; 
+export default ManagedServices;
