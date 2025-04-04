@@ -1,5 +1,7 @@
-
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
+
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
@@ -8,48 +10,74 @@ import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
 import AnimatedGradient from '@/components/AnimatedGradient';
 
-const Index = () => {
-  // Smooth scroll implementation for navigation
+const useSmoothScroll = () => {
   useEffect(() => {
     const handleAnchorClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const anchor = target.closest('a');
-      
+      const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
       if (!anchor) return;
-      
-      // Check if the anchor has a hash and is an internal link
-      const href = anchor.getAttribute('href');
-      if (!href || !href.startsWith('#')) return;
-      
-      const targetId = href.substring(1);
-      const targetElement = document.getElementById(targetId);
-      
+
+      const targetId = anchor.getAttribute('href')?.substring(1);
+      const targetElement = targetId && document.getElementById(targetId);
       if (!targetElement) return;
-      
+
       e.preventDefault();
-      
       window.scrollTo({
-        top: targetElement.offsetTop - 80, // Adjust for header height
+        top: targetElement.offsetTop - 80, // adjust for header height
         behavior: 'smooth'
       });
     };
-    
+
     document.addEventListener('click', handleAnchorClick);
     return () => document.removeEventListener('click', handleAnchorClick);
   }, []);
-  
+};
+
+const Index: React.FC = () => {
+  useSmoothScroll();
+
   return (
-    <div className="min-h-screen relative">
-      <AnimatedGradient />
-      <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <Stage />
-        <Testimonials />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Helmet>
+        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#E6C88C" media="(prefers-color-scheme: light)" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </Helmet>
+      <motion.div 
+        className="min-h-screen relative"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <style>
+          {`
+            @supports (-webkit-touch-callout: none) {
+              body { background-color: #000000; }
+              .safari-top-bar, .safari-bottom-bar {
+                position: fixed;
+                left: 0;
+                right: 0;
+                background-color: #000000;
+                z-index: 9999;
+              }
+              .safari-top-bar { top: 0; height: env(safe-area-inset-top); }
+              .safari-bottom-bar { bottom: 0; height: env(safe-area-inset-bottom); }
+            }
+          `}
+        </style>
+        <div className="safari-top-bar" />
+        <div className="safari-bottom-bar" />
+        <AnimatedGradient />
+        <Navbar />
+        <main>
+          <Hero />
+          <Features />
+          <Stage />
+          <Testimonials />
+        </main>
+        <Footer />
+      </motion.div>
+    </>
   );
 };
 

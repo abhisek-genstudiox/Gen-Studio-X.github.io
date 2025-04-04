@@ -1,113 +1,108 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu, X } from 'lucide-react';
+import { useElementOnScreen } from '@/utils/animations';
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
+
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
-  
+
+  const navItems = [
+    { label: 'Managed Services', href: '/managed-services' },
+    { label: 'Content Studio Suite', href: '/content-studio-suite' },
+  ];
+
   return (
-    <header 
+    <motion.header
+      ref={containerRef}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
-        scrolled ? 'py-3 bg-black/80 backdrop-blur-lg' : 'py-5 bg-transparent'
+        scrolled ? 'py-3 bg-black/40 backdrop-blur-lg border-b border-white/10' : 'py-5 bg-transparent',
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       )}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Logo - Left Section */}
-        <a href="/" className="flex items-center">
-          <img src="/logo.png" alt="GenStudioX Logo" className="h-8 w-auto" />
-        </a>
-        
-        {/* Center Navigation */}
+        <motion.a href="/" className="flex items-center group" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <img src="/logo.png" alt="GenStudioX Logo" className="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
+        </motion.a>
+
         <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8 absolute left-1/2 transform -translate-x-1/2">
-          <a href="/work" className="text-white text-sm xl:text-base font-medium hover:text-[#E6C88C] transition-colors duration-300">
-            Work
-          </a>
-          <a href="/contact" className="text-white text-sm xl:text-base font-medium hover:text-[#E6C88C] transition-colors duration-300">
-            Contact
-          </a>
+          {navItems.map((item) => (
+            <motion.a
+              key={item.label}
+              href={item.href}
+              className="text-white/80 text-sm xl:text-base font-medium hover:text-[#E6C88C] transition-colors duration-300 font-display relative group"
+              whileHover={{ scale: 1.05 }}
+            >
+              {item.label}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E6C88C] transition-all duration-300 group-hover:w-full" />
+            </motion.a>
+          ))}
         </nav>
 
-        {/* Right Section */}
         <div className="flex items-center">
-          <a 
-            href="/signup" 
-            className="hidden lg:block px-4 xl:px-5 py-2 rounded-full bg-[#E6C88C] text-black text-sm xl:text-base font-medium hover:shadow-md hover:bg-[#E6C88C]/90 transition-all duration-300"
-          >
-            Let's talk
-          </a>
-          
-          {/* Mobile menu button */}
-          <button 
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden flex flex-col items-center justify-center w-8 h-8 space-y-1.5"
-            aria-label="Toggle menu"
-          >
-            <span className={cn(
-              "w-6 h-0.5 bg-[#E6C88C] transition-all duration-300 ease-out",
-              menuOpen && "transform rotate-45 translate-y-2"
-            )}></span>
-            <span className={cn(
-              "w-6 h-0.5 bg-[#E6C88C] transition-all duration-300 ease-out",
-              menuOpen && "opacity-0"
-            )}></span>
-            <span className={cn(
-              "w-6 h-0.5 bg-[#E6C88C] transition-all duration-300 ease-out",
-              menuOpen && "transform -rotate-45 -translate-y-2"
-            )}></span>
-          </button>
-        </div>
-      </div>
-      
-      {/* Mobile Navigation */}
-      <div className={cn(
-        "fixed inset-0 bg-black z-40 lg:hidden transition-all duration-300 ease-in-out",
-        menuOpen ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full pointer-events-none"
-      )}>
-        {/* Add close button */}
-        <button 
-          onClick={() => setMenuOpen(false)}
-          className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center"
-          aria-label="Close menu"
-        >
-          <span className="w-6 h-0.5 bg-[#E6C88C] absolute transform rotate-45"></span>
-          <span className="w-6 h-0.5 bg-[#E6C88C] absolute transform -rotate-45"></span>
-        </button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="default"
+              className="hidden lg:block bg-[#E6C88C] text-black hover:bg-[#E6C88C]/90 font-display shadow-lg shadow-[#E6C88C]/20"
+              asChild
+            >
+              <a href="/signup">Let's talk</a>
+            </Button>
+          </motion.div>
 
-        <div className="flex flex-col items-center justify-center h-full space-y-6 sm:space-y-8 p-5">
-          <a 
-            href="/work"
-            onClick={() => setMenuOpen(false)}
-            className="text-lg sm:text-xl font-medium text-white hover:text-[#E6C88C] transition-colors duration-300"
-          >
-            Work
-          </a>
-          <a 
-            href="/contact"
-            onClick={() => setMenuOpen(false)}
-            className="text-lg sm:text-xl font-medium text-white hover:text-[#E6C88C] transition-colors duration-300"
-          >
-            Contact
-          </a>
-          <a 
-            href="/signup" 
-            onClick={() => setMenuOpen(false)}
-            className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-[#E6C88C] text-black text-base sm:text-lg font-medium hover:bg-[#E6C88C]/90 transition-colors duration-300"
-          >
-            Let's talk
-          </a>
+          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="lg:hidden text-[#E6C88C] hover:bg-transparent">
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-full sm:w-[400px] bg-black/90 backdrop-blur-lg border-none [&>button]:text-[#E6C88C] [&>button]:hover:text-[#E6C88C]/80"
+            >
+              <div className="flex flex-col items-center justify-center h-full space-y-6 sm:space-y-8 p-5">
+                {navItems.map((item) => (
+                  <motion.a
+                    key={item.label}
+                    href={item.href}
+                    className="text-lg sm:text-xl font-medium text-white hover:text-[#E6C88C] transition-colors duration-300 font-display"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </motion.a>
+                ))}
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant="default"
+                    className="w-full bg-[#E6C88C] text-black hover:bg-[#E6C88C]/90 font-display shadow-lg shadow-[#E6C88C]/20"
+                    asChild
+                  >
+                    <a href="/signup">Let's talk</a>
+                  </Button>
+                </motion.div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 };
 
