@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
 import { useElementOnScreen } from '@/utils/animations';
+import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -35,21 +36,26 @@ const Navbar: React.FC = () => {
       )}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        <motion.a href="/" className="flex items-center group" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <img src="/logo.png" alt="GenStudioX Logo" className="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
-        </motion.a>
+        <motion.div className="flex items-center group" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Link to="/" className="flex items-center">
+            <img src="/logo.png" alt="GenStudioX Logo" className="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
+          </Link>
+        </motion.div>
 
         <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8 absolute left-1/2 transform -translate-x-1/2">
           {navItems.map((item) => (
-            <motion.a
+            <motion.div
               key={item.label}
-              href={item.href}
-              className="text-white/80 text-sm xl:text-base font-medium hover:text-[#E6C88C] transition-colors duration-300 font-display relative group"
               whileHover={{ scale: 1.05 }}
             >
-              {item.label}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E6C88C] transition-all duration-300 group-hover:w-full" />
-            </motion.a>
+              <Link
+                to={item.href}
+                className="text-white/80 text-sm xl:text-base font-medium hover:text-[#E6C88C] transition-colors duration-300 font-display relative group"
+              >
+                {item.label}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E6C88C] transition-all duration-300 group-hover:w-full" />
+              </Link>
+            </motion.div>
           ))}
         </nav>
 
@@ -60,7 +66,7 @@ const Navbar: React.FC = () => {
               className="hidden lg:block bg-[#E6C88C] text-black hover:bg-[#E6C88C]/90 font-display shadow-lg shadow-[#E6C88C]/20"
               asChild
             >
-              <a href="/signup">Let's talk</a>
+              <Link to="/signup">Let's talk</Link>
             </Button>
           </motion.div>
 
@@ -77,16 +83,19 @@ const Navbar: React.FC = () => {
             >
               <div className="flex flex-col items-center justify-center h-full space-y-6 sm:space-y-8 p-5">
                 {navItems.map((item) => (
-                  <motion.a
+                  <motion.div
                     key={item.label}
-                    href={item.href}
-                    className="text-lg sm:text-xl font-medium text-white hover:text-[#E6C88C] transition-colors duration-300 font-display"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.label}
-                  </motion.a>
+                    <Link
+                      to={item.href}
+                      className="text-lg sm:text-xl font-medium text-white hover:text-[#E6C88C] transition-colors duration-300 font-display"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
                 ))}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
@@ -94,7 +103,7 @@ const Navbar: React.FC = () => {
                     className="w-full bg-[#E6C88C] text-black hover:bg-[#E6C88C]/90 font-display shadow-lg shadow-[#E6C88C]/20"
                     asChild
                   >
-                    <a href="/signup">Let's talk</a>
+                    <Link to="/signup">Let's talk</Link>
                   </Button>
                 </motion.div>
               </div>
