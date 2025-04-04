@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Twitter, Instagram } from 'lucide-react';
+import { Github, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { useElementOnScreen } from '@/utils/animations';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
@@ -9,7 +9,7 @@ import FooterPopup from './FooterPopup';
 const socialLinks = [
   { icon: Twitter, href: "#", label: "Twitter" },
   { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Github, href: "#", label: "GitHub" },
+  { icon: Linkedin, href: "#", label: "LinkedIn" },
 ];
 
 const Footer: React.FC = () => {
