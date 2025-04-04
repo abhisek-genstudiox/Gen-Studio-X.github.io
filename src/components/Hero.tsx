@@ -1,60 +1,71 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { useElementOnScreen } from '@/utils/animations';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+
+const useTypewriter = (
+  texts: string[],
+  typingSpeed = 80,
+  deletingSpeed = 30,
+  pauseTime = 1500
+) => {
+  const [displayText, setDisplayText] = useState('');
+  const [textIndex, setTextIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentText = texts[textIndex];
+    const timeout = setTimeout(() => {
+      if (isDeleting) {
+        if (displayText.length === 0) {
+          setIsDeleting(false);
+          setTextIndex((prev) => (prev + 1) % texts.length);
+        } else {
+          setDisplayText(displayText.slice(0, -1));
+        }
+      } else {
+        if (displayText.length === currentText.length) {
+          setTimeout(() => setIsDeleting(true), pauseTime);
+        } else {
+          setDisplayText(currentText.slice(0, displayText.length + 1));
+        }
+      }
+    }, isDeleting ? deletingSpeed : typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, textIndex, texts, typingSpeed, deletingSpeed, pauseTime]);
+
+  return displayText;
+};
 
 const Hero: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [typingText, setTypingText] = useState('');
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const typingRef = useRef<HTMLSpanElement>(null);
   const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
-  
-  const texts = [
-    'stunning visuals',
-    'powerful content',
-    'creative designs',
-    'amazing videos'
-  ];
-  
+  const texts = useMemo(
+    () => ['stunning visuals', 'powerful content', 'creative designs', 'amazing videos'],
+    []
+  );
+  const typingText = useTypewriter(texts);
+
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    const currentText = texts[currentTextIndex];
-    const typingSpeed = isDeleting ? 30 : 80;
-    
-    const type = () => {
-      if (isDeleting) {
-        setTypingText(prev => prev.substring(0, prev.length - 1));
-        if (typingText === '') {
-          setIsDeleting(false);
-          setCurrentTextIndex((currentTextIndex + 1) % texts.length);
-        }
-      } else {
-        setTypingText(currentText.substring(0, typingText.length + 1));
-        if (typingText === currentText) {
-          timeout = setTimeout(() => setIsDeleting(true), 1500);
-          return;
-        }
-      }
-      timeout = setTimeout(type, typingSpeed);
-    };
-    
-    timeout = setTimeout(type, typingSpeed);
-    return () => clearTimeout(timeout);
-  }, [typingText, currentTextIndex, isDeleting, texts]);
-  
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.log("Video autoplay failed:", error);
-      });
-    }
+    videoRef.current?.play().catch((error) => console.error("Video autoplay failed:", error));
   }, []);
-  
+
+  // Generate particle positions only once
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 20 }, () => ({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        duration: Math.random() * 3 + 2,
+        delay: Math.random() * 2,
+      })),
+    []
+  );
+
   return (
     <section className="relative h-[100svh] bg-black text-white overflow-hidden">
-      {/* Enhanced Video Background with Overlay */}
+      {/* Video Background */}
       <div className="absolute inset-0">
         <video
           ref={videoRef}
@@ -73,25 +84,21 @@ const Hero: React.FC = () => {
 
       {/* Particle Effects */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((p, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-[#E6C88C] rounded-full"
-            initial={{ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight }}
+            initial={{ x: p.x, y: p.y }}
             animate={{
-              y: [null, Math.random() * window.innerHeight],
+              y: [p.y, Math.random() * window.innerHeight],
               opacity: [0, 1, 0],
             }}
-            transition={{
-              duration: Math.random() * 3 + 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
+            transition={{ duration: p.duration, repeat: Infinity, delay: p.delay, ease: 'linear' }}
           />
         ))}
       </div>
 
-      <div 
+      <div
         ref={containerRef}
         className={cn(
           "container mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col justify-between relative z-10 py-6 sm:py-8 md:py-10",
@@ -99,8 +106,8 @@ const Hero: React.FC = () => {
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         )}
       >
-        {/* Enhanced Top Section */}
-        <motion.div 
+        {/* Top Section */}
+        <motion.div
           className="pt-8 sm:pt-12 md:pt-16 lg:pt-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -111,8 +118,8 @@ const Hero: React.FC = () => {
           </h1>
         </motion.div>
 
-        {/* Enhanced Middle Section */}
-        <motion.div 
+        {/* Middle Section */}
+        <motion.div
           className="flex flex-col items-end text-right my-auto"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -125,15 +132,15 @@ const Hero: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Enhanced Bottom Section */}
-        <motion.div 
+        {/* Bottom Section */}
+        <motion.div
           className="pb-4 sm:pb-6 md:pb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <a 
-            href="mailto:contact@genstudiox.ai" 
+          <a
+            href="mailto:contact@genstudiox.ai"
             className="text-sm sm:text-base text-[#E6C88C] font-display hover:text-white transition-colors duration-300"
           >
             contact@genstudiox.ai

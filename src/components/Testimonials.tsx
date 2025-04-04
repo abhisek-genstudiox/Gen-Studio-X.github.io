@@ -1,12 +1,18 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { useElementOnScreen } from '@/utils/animations';
+import { motion } from 'framer-motion';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import * as HoverCard from '@radix-ui/react-hover-card';
-import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { useElementOnScreen } from '@/utils/animations';
 
-const brands = [
+interface Brand {
+  id: number;
+  name: string;
+  image: string;
+}
+
+const brands: Brand[] = [
   { id: 1, name: 'OpenAI', image: '/brands/openAI.svg.png' },
   { id: 2, name: 'Stability AI', image: '/brands/stabilityai.png' },
   { id: 3, name: 'MidJourney', image: '/brands/MidJourney.png' },
@@ -21,7 +27,8 @@ const brands = [
 
 const Testimonials: React.FC = () => {
   const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
-  
+  const duplicatedBrands = [...brands, ...brands];
+
   return (
     <section id="testimonials" className="section-padding bg-black relative overflow-hidden py-8 sm:py-12 md:py-16">
       <div className="container mx-auto px-4">
@@ -47,13 +54,13 @@ const Testimonials: React.FC = () => {
         <ScrollArea.Root className="max-w-full mx-auto overflow-hidden">
           <ScrollArea.Viewport className="w-full h-full">
             <div className="flex animate-scroll whitespace-nowrap">
-              {[...brands, ...brands].map((brand, index) => (
+              {duplicatedBrands.map((brand, index) => (
                 <HoverCard.Root key={`${brand.id}-${index}`}>
                   <HoverCard.Trigger asChild>
                     <motion.div
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
-                      className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-2 sm:mx-3 md:mx-4 p-2 sm:p-3 md:p-4 flex items-center justify-center transition-all duration-300 hover:scale-105"
+                      className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-2 sm:mx-3 md:mx-4 p-2 sm:p-3 md:p-4 flex items-center justify-center transition-all duration-300"
                     >
                       <AspectRatio.Root ratio={1}>
                         <motion.img 
