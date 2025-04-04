@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -21,8 +22,12 @@ const useSmoothScroll = () => {
       if (!targetElement) return;
 
       e.preventDefault();
+      const headerOffset = 80;
+      const elementPosition = targetElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
       window.scrollTo({
-        top: targetElement.offsetTop - 80, // adjust for header height
+        top: offsetPosition,
         behavior: 'smooth'
       });
     };
