@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar';
 import Hero from '../components/home/Hero';
 import HeroPic from '../components/home/HeroPic';
+import Logos from '../components/home/Logos';
 
 const Home = () => {
   return (
@@ -8,6 +9,7 @@ const Home = () => {
       <Navbar />
       <Hero />
       <HeroPic />
+      <Logos />
     </div>
   )
 }
