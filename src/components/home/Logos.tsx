@@ -3,7 +3,7 @@ import Marquee from 'react-fast-marquee';
 
 const Logos = () => {
   return (
-    <div className="py-24 sm:py-32 bg-black">
+    <div className="pt-8 bg-black">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <p className="text-center text-sm font-semibold text-gray-400 mb-10">
