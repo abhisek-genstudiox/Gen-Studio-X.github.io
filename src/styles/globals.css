@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Progress Bar Animation */
+.progress-active .progress-line {
+  opacity: 1 !important;
+  box-shadow: 0 0 20px rgba(39, 39, 42, 0.8) !important;
+}
+
+/* Optional: Add a subtle animation to make the glow pulsate */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 20px rgba(39, 39, 42, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(39, 39, 42, 1);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(39, 39, 42, 0.8);
+  }
+}
+
+.progress-active .progress-line {
+  animation: glowPulse 2s infinite;
+} 
