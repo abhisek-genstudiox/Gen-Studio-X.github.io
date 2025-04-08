@@ -1,18 +1,26 @@
 import { Link } from 'react-router-dom';
+import React from 'react';
 
-const Hero = () => {
+const Hero: React.FC = React.memo(() => {
   return (
     <div className="relative z-20">
-      {/* Grid pattern */}
-      <div 
+      {/* Grid Pattern */}
+      <div
         className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]"
         style={{ opacity: 0.3 }}
+        aria-hidden="true"
       />
 
-      {/* Ambient light effects */}
-      <div className="absolute -bottom-32 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl -translate-x-1/2" />
-      <div className="absolute -bottom-32 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl translate-x-1/2" />
-      
+      {/* Ambient Light Effects */}
+      <div
+        className="absolute -bottom-32 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl -translate-x-1/2"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -bottom-32 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl translate-x-1/2"
+        aria-hidden="true"
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center relative">
         {/* Announcement Banner */}
         <Link
@@ -20,18 +28,8 @@ const Hero = () => {
           className="inline-flex items-center px-4 py-2 rounded-full text-sm text-gray-300 bg-gray-800/50 hover:bg-gray-700/50 mb-12 transition-colors"
         >
           Latest seed round announcement
-          <svg
-            className="w-4 h-4 ml-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
+          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </Link>
 
@@ -58,6 +56,6 @@ const Hero = () => {
       </div>
     </div>
   );
-};
+});
 
-export default Hero; 
+export default Hero;
