@@ -244,8 +244,10 @@ const CardGrid: React.FC = () => {
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto px-6 lg:px-8">
-      {featureCards}
+    <div className="bg-black py-12 sm:py-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-[90rem] mx-auto px-8 lg:px-16">
+        {featureCards}
+      </div>
     </div>
   );
 };

@@ -26,13 +26,11 @@ const Home: React.FC = () => {
         <Navbar />
         <Hero />
         <HeroPic />
+        <HowItWorks />
         <Logos />
         <Product />
-        <HowItWorks />
         <Enterprise />
         <Features />
-        <Pricing />
-        <FAQ />
         <Buy />
       </div>
     </div>

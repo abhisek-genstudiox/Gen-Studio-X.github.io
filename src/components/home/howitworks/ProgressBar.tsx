@@ -1,28 +1,31 @@
 import React, { useEffect, useRef } from 'react';
 
-interface ProgressBarProps {
-  color?: string;
-  height?: string;
-}
+interface ProgressBarProps {}
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ 
-  color = '#27272A',
-  height = '8rem'
-}) => {
+const ProgressBar: React.FC<ProgressBarProps> = () => {
   const barRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('progress-active');
+            if (progressRef.current) {
+              progressRef.current.style.height = '100%';
+              progressRef.current.style.opacity = '1';
+            }
+          } else {
+            if (progressRef.current) {
+              progressRef.current.style.height = '0%';
+              progressRef.current.style.opacity = '0';
+            }
           }
         });
       },
       {
         threshold: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
-        rootMargin: '-10% 0px -10% 0px'
+        rootMargin: '-50% 0px -50% 0px'
       }
     );
 
@@ -35,20 +38,46 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <div 
-      ref={barRef}
-      className="absolute left-5 top-full w-0.5 transition-all duration-1000"
-      style={{ 
-        height,
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        zIndex: 0
       }}
     >
-      <div 
-        className="h-full w-full opacity-0 progress-line"
-        style={{
-          background: `linear-gradient(180deg, ${color} 0%, rgba(39, 39, 42, 0.3) 100%)`,
-          boxShadow: '0 0 10px rgba(39, 39, 42, 0.5)',
-          transition: 'opacity 1s ease-out, box-shadow 1s ease-out'
+      <div
+        ref={barRef}
+        className="absolute left-5 w-0.5"
+        style={{ 
+          top: '0',
+          height: '100%',
         }}
-      />
+      >
+        <div 
+          ref={progressRef}
+          className="w-full transition-all duration-1000 ease-in-out relative"
+          style={{
+            background: `linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(39, 39, 42, 0.3) 100%)`,
+            boxShadow: `
+              0 0 10px rgba(255, 255, 255, 0.5),
+              0 0 20px rgba(255, 255, 255, 0.3),
+              0 0 30px rgba(255, 255, 255, 0.2)
+            `,
+            height: '0%',
+            opacity: '0',
+          }}
+        >
+          <div 
+            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+            style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              boxShadow: `
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.4)
+              `
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 };

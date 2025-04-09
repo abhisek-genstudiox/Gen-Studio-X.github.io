@@ -1,43 +1,55 @@
-import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+const phrases = [
+  "Stunning Visuals",
+  "Amazing Videos",
+  "Powerful Content"
+];
+
+const TYPING_SPEED = 100; // ms delay between each character typing
+const PAUSE_DURATION = 2000; // ms pause after full phrase is displayed
+const BACKSPACE_SPEED = 50; // ms delay between each character deletion
 
 const Hero: React.FC = React.memo(() => {
-  const phrases = [
-    "Stunning Visuals",
-    "Amazing Videos",
-    "Powerful Content"
-  ];
-  
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>;
+    let timeoutId: ReturnType<typeof setTimeout>;
     const currentPhrase = phrases[currentPhraseIndex];
-    
-    if (isTyping) {
+
+    const handleTyping = () => {
+      // If the current phrase is not fully typed out, add the next character.
       if (displayedText.length < currentPhrase.length) {
-        timeout = setTimeout(() => {
-          setDisplayedText(currentPhrase.slice(0, displayedText.length + 1));
-        }, 100); // Typing speed
+        setDisplayedText(currentPhrase.slice(0, displayedText.length + 1));
+        timeoutId = setTimeout(handleTyping, TYPING_SPEED);
       } else {
-        timeout = setTimeout(() => {
-          setIsTyping(false);
-        }, 2000); // Pause after typing
+        // Pause before starting to delete the text.
+        timeoutId = setTimeout(() => setIsTyping(false), PAUSE_DURATION);
       }
-    } else {
+    };
+
+    const handleDeletion = () => {
+      // If there's still text to delete, remove one character.
       if (displayedText.length > 0) {
-        timeout = setTimeout(() => {
-          setDisplayedText(displayedText.slice(0, -1));
-        }, 50); // Backspace speed
+        setDisplayedText(displayedText.slice(0, -1));
+        timeoutId = setTimeout(handleDeletion, BACKSPACE_SPEED);
       } else {
+        // Once deletion is complete, switch back to typing mode and move to the next phrase.
         setIsTyping(true);
-        setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
+        setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
       }
+    };
+
+    if (isTyping) {
+      handleTyping();
+    } else {
+      handleDeletion();
     }
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timeoutId);
   }, [displayedText, isTyping, currentPhraseIndex]);
 
   return (
@@ -50,7 +62,6 @@ const Hero: React.FC = React.memo(() => {
           style={{ opacity: 0.3 }}
           aria-hidden="true"
         />
-
         {/* Ambient Light Effects */}
         <div
           className="absolute -bottom-32 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl -translate-x-1/2"
@@ -82,8 +93,7 @@ const Hero: React.FC = React.memo(() => {
 
           {/* Description */}
           <p className="text-gray-400 text-xl mb-12 max-w-3xl mx-auto">
-            Streamline processes and unlock valuable insights effortlessly. Join
-            businesses levelling up their operations with our innovative AI tools.
+            Optimize your workflow and gain deep insights with ease. Join leading businesses transforming their operations through our cutting-edge AI solutions.
           </p>
 
           {/* CTA Button */}
@@ -91,7 +101,7 @@ const Hero: React.FC = React.memo(() => {
             to="/template"
             className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
           >
-            Get template
+            Join the waitlist
           </Link>
         </div>
       </div>

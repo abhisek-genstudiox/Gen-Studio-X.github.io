@@ -41,6 +41,21 @@ const Card: React.FC<CardProps> = ({ children, className = '', variant = 'chat' 
     "hover:after:opacity-100",
     "after:transition-opacity",
     "after:duration-500",
+    "before:absolute",
+    "before:inset-0",
+    "before:rounded-3xl",
+    "before:bg-gradient-to-b",
+    "before:from-white/20",
+    "before:via-white/10",
+    "before:to-transparent",
+    "before:opacity-0",
+    "hover:before:opacity-100",
+    "before:transition-opacity",
+    "before:duration-500",
+    "before:blur-sm",
+    "hover:ring-1",
+    "hover:ring-gray-400/20",
+    "hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]",
   ];
 
   const variantClasses = `${gradientMap[variant]} ${glowMap[variant]}`;
