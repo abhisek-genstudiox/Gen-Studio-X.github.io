@@ -1,34 +1,18 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import ContentStudio from "./pages/ContentStudio";
-import ManagedServices from "./pages/ManagedServices";
-import NotFound from "./pages/NotFound";
-import { motion, AnimatePresence } from "framer-motion";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import AICreativeSuite from './pages/AICreativeSuite';
+import ManagedServices from './pages/ManagedServices';
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <HashRouter basename="/">
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/managed-services" element={<ManagedServices />} />
-            <Route path="/content-studio-suite" element={<ContentStudio />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AnimatePresence>
-      </HashRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/ai-creative-suite" element={<AICreativeSuite />} />
+        <Route path="/managed-services" element={<ManagedServices />} />
+      </Routes>
+    </Router>
+  );
+}
 
 export default App;

@@ -1,23 +1,19 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Enterprise from '../components/managedServices/Enterprise';
-import Features from '../components/managedServices/Features';
-import Buy from '../components/managedServices/Buy';
+import Product from '../components/aiCreativeSuite/Product';
 import Footer from '../components/Footer';
 
-const ManagedServices: React.FC = () => {
+const AICreativeSuite: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white relative overflow-hidden">
       <div className="fixed inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none" />
       <div className="relative z-10">
         <Navbar />
-        <Enterprise />
-        <Features />
-        <Buy />
+        <Product />
         <Footer />
       </div>
     </div>
   );
 };
 
-export default ManagedServices; 
+export default AICreativeSuite; 

@@ -1,117 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, X } from 'lucide-react';
-import { useElementOnScreen } from '@/utils/animations';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import React from 'react';
+
+const navLinks = [
+  { to: '/', label: 'Home' },
+  { to: '/ai-creative-suite', label: 'AI Creative Suite' },
+  { to: '/managed-services', label: 'Managed Services' },
+];
 
 const Navbar: React.FC = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { containerRef, isVisible } = useElementOnScreen({ threshold: 0.1 });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  const navItems = [
-    { label: 'Managed Services', href: '/managed-services' },
-    { label: 'Content Studio Suite', href: '/content-studio-suite' },
-  ];
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen((prev) => !prev);
+  };
 
   return (
-    <motion.header
-      ref={containerRef}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
-        scrolled ? 'py-3 bg-black/40 backdrop-blur-lg border-b border-white/10' : 'py-5 bg-transparent',
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      )}
-    >
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        <motion.div className="flex items-center group" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Link to="/" className="flex items-center">
-            <img src="/logo.png" alt="GenStudioX Logo" className="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
-          </Link>
-        </motion.div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
+      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-3">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0 ml-0">
+            <Link to="/" className="flex items-center" aria-label="Home">
+              <img 
+                src="/Black Logo GSX.png" 
+                alt="Gen Studio X Logo" 
+                className="h-8 w-auto filter invert brightness-0"
+              />
+            </Link>
+          </div>
 
-        <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8 absolute left-1/2 transform -translate-x-1/2">
-          {navItems.map((item) => (
-            <motion.div
-              key={item.label}
-              whileHover={{ scale: 1.05 }}
-            >
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navLinks.map(({ to, label }) => (
               <Link
-                to={item.href}
-                className="text-white/80 text-sm xl:text-base font-medium hover:text-[#E6C88C] transition-colors duration-300 font-display relative group"
+                key={to}
+                to={to}
+                className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
               >
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E6C88C] transition-all duration-300 group-hover:w-full" />
+                {label}
               </Link>
-            </motion.div>
-          ))}
-        </nav>
+            ))}
+          </div>
 
-        <div className="flex items-center">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              variant="default"
-              className="hidden lg:block bg-[#E6C88C] text-black hover:bg-[#E6C88C]/90 font-display shadow-lg shadow-[#E6C88C]/20"
-              asChild
+          {/* Get Template Button for Desktop */}
+          <div className="hidden md:block">
+            <Link
+              to="/template"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
             >
-              <Link to="/signup">Let's talk</Link>
-            </Button>
-          </motion.div>
+              Let's Talk
+            </Link>
+          </div>
 
-          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden text-[#E6C88C] hover:bg-transparent">
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-full sm:w-[400px] bg-black/90 backdrop-blur-lg border-none [&>button]:text-[#E6C88C] [&>button]:hover:text-[#E6C88C]/80"
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button
+              onClick={toggleMobileMenu}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
             >
-              <div className="flex flex-col items-center justify-center h-full space-y-6 sm:space-y-8 p-5">
-                {navItems.map((item) => (
-                  <motion.div
-                    key={item.label}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link
-                      to={item.href}
-                      className="text-lg sm:text-xl font-medium text-white hover:text-[#E6C88C] transition-colors duration-300 font-display"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  </motion.div>
-                ))}
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant="default"
-                    className="w-full bg-[#E6C88C] text-black hover:bg-[#E6C88C]/90 font-display shadow-lg shadow-[#E6C88C]/20"
-                    asChild
-                  >
-                    <Link to="/signup">Let's talk</Link>
-                  </Button>
-                </motion.div>
-              </div>
-            </SheetContent>
-          </Sheet>
+              <span className="sr-only">Open main menu</span>
+              {!isMobileMenuOpen ? (
+                <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              ) : (
+                <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </div>
-    </motion.header>
+
+      {/* Mobile Navigation Menu */}
+      <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-black/90 backdrop-blur-sm">
+          {navLinks.map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
+            >
+              {label}
+            </Link>
+          ))}
+          <Link
+            to="/template"
+            className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-800 hover:bg-gray-700"
+          >
+            Get template
+          </Link>
+        </div>
+      </div>
+    </nav>
   );
 };
 
