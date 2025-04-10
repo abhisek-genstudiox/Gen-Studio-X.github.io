@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
               to="/template"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
             >
-              Get template
+              Let's Talk
             </Link>
           </div>
 
