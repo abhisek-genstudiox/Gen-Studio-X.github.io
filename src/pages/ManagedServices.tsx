@@ -1,8 +1,8 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Enterprise from '../components/home/Enterprise';
-import Features from '../components/home/Features';
-import Buy from '../components/home/Buy';
+import Enterprise from '../components/managedServices/Enterprise';
+import Features from '../components/managedServices/Features';
+import Buy from '../components/managedServices/Buy';
 import Footer from '../components/Footer';
 
 const ManagedServices: React.FC = () => {

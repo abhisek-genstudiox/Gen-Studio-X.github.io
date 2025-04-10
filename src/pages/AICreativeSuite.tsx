@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Product from '../components/home/Product';
+import Product from '../components/aiCreativeSuite/Product';
 import Footer from '../components/Footer';
 
 const AICreativeSuite: React.FC = () => {
