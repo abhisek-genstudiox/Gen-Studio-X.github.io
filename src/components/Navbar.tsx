@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
               to="/template"
               className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-800 hover:bg-gray-700"
             >
-              Get template
+              Let's Talk
             </Link>
           </div>
         </div>
