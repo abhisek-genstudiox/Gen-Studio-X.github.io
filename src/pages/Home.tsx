@@ -2,13 +2,8 @@ import Navbar from '../components/Navbar';
 import Hero from '../components/home/Hero';
 import HeroPic from '../components/home/HeroPic';
 import Logos from '../components/home/Logos';
-import Product from '../components/home/Product';
 import HowItWorks from '../components/home/HowItWorks';
-import Enterprise from '../components/home/Enterprise';
-import Features from '../components/home/Features';
-import Pricing from '../components/home/Pricing';
-import FAQ from '../components/home/FAQ';
-import Buy from '../components/home/Buy';
+import Footer from '../components/Footer';
 import React, { useEffect } from 'react';
 
 const Home: React.FC = () => {
@@ -28,12 +23,10 @@ const Home: React.FC = () => {
         <HeroPic />
         <HowItWorks />
         <Logos />
-        <Product />
-        <Enterprise />
-        <Features />
-        <Buy />
+        <Footer />
       </div>
     </div>
   );
 };
+
 export default Home; 

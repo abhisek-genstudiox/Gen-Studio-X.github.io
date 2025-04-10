@@ -3,12 +3,9 @@ import { useState } from 'react';
 import React from 'react';
 
 const navLinks = [
-  { to: '/product', label: 'Product' },
-  { to: '/how-it-works', label: 'How it works' },
-  { to: '/enterprise', label: 'Enterprise' },
-  { to: '/features', label: 'Features' },
-  { to: '/pricing', label: 'Pricing' },
-  { to: '/faq', label: 'FAQ' },
+  { to: '/', label: 'Home' },
+  { to: '/ai-creative-suite', label: 'AI Creative Suite' },
+  { to: '/managed-services', label: 'Managed Services' },
 ];
 
 const Navbar: React.FC = () => {
@@ -20,14 +17,16 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-3">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 ml-0">
             <Link to="/" className="flex items-center" aria-label="Home">
-              <div className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center">
-                <div className="w-4 h-4 border-2 border-white rounded-full"></div>
-              </div>
+              <img 
+                src="/Black Logo GSX.png" 
+                alt="Gen Studio X Logo" 
+                className="h-8 w-auto filter invert brightness-0"
+              />
             </Link>
           </div>
 

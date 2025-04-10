@@ -3,9 +3,13 @@ import Marquee from 'react-fast-marquee';
 
 const logos = ['Cloud', 'Luminous', 'Chain', 'Minty', 'Trace', 'Product'];
 
-const Logos: React.FC = React.memo(() => {
+interface LogosProps {
+  className?: string;
+}
+
+const Logos: React.FC<LogosProps> = React.memo(({ className }) => {
   return (
-    <div className="pt-8 bg-black">
+    <div className={`pt-8 pb-16 bg-black ${className || ''}`}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <p className="text-center text-5xl font-semibold text-white mb-10">
