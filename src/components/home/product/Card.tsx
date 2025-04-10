@@ -3,7 +3,7 @@ import React from 'react';
 interface CardProps {
   children: React.ReactNode;
   className?: string;
-  variant?: 'chat' | 'citation' | 'time' | 'integration';
+  variant?: 'chat' | 'citation' | 'time' | 'integration' | 'security' | 'analytics';
 }
 
 const gradientMap: Record<NonNullable<CardProps['variant']>, string> = {
@@ -11,6 +11,8 @@ const gradientMap: Record<NonNullable<CardProps['variant']>, string> = {
   citation: 'from-emerald-950/30 via-transparent to-transparent',
   time: 'from-purple-950/30 via-transparent to-transparent',
   integration: 'from-blue-950/30 via-transparent to-transparent',
+  security: 'from-indigo-950/30 via-transparent to-transparent',
+  analytics: 'from-rose-950/30 via-transparent to-transparent',
 };
 
 const glowMap: Record<NonNullable<CardProps['variant']>, string> = {
@@ -18,6 +20,8 @@ const glowMap: Record<NonNullable<CardProps['variant']>, string> = {
   citation: 'after:bg-emerald-500/5',
   time: 'after:bg-purple-500/5',
   integration: 'after:bg-blue-500/5',
+  security: 'after:bg-indigo-500/5',
+  analytics: 'after:bg-rose-500/5',
 };
 
 const Card: React.FC<CardProps> = ({ children, className = '', variant = 'chat' }) => {
