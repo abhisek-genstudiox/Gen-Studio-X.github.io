@@ -7,50 +7,66 @@ const phrases = [
   "Powerful Content"
 ];
 
-const TYPING_SPEED = 100; // ms delay between each character typing
-const PAUSE_DURATION = 2000; // ms pause after full phrase is displayed
-const BACKSPACE_SPEED = 50; // ms delay between each character deletion
+const TYPING_SPEED = 100; // Delay between each character typing (ms)
+const PAUSE_DURATION = 2000; // Pause after the full phrase is displayed (ms)
+const DELETION_SPEED = 50; // Delay between each character deletion (ms)
 
-const Hero: React.FC = React.memo(() => {
-  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+/**
+ * Custom hook for the typewriter effect.
+ *
+ * @param phrases - Array of phrases to animate.
+ * @param typingSpeed - Speed at which characters are typed.
+ * @param deletionSpeed - Speed at which characters are deleted.
+ * @param pauseDuration - Pause duration after a phrase is fully displayed.
+ * @returns The current text to display.
+ */
+function useTypewriter(
+  phrases: string[],
+  typingSpeed: number,
+  deletionSpeed: number,
+  pauseDuration: number
+) {
   const [displayedText, setDisplayedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
-    const currentPhrase = phrases[currentPhraseIndex];
-
-    const handleTyping = () => {
-      // If the current phrase is not fully typed out, add the next character.
-      if (displayedText.length < currentPhrase.length) {
-        setDisplayedText(currentPhrase.slice(0, displayedText.length + 1));
-        timeoutId = setTimeout(handleTyping, TYPING_SPEED);
-      } else {
-        // Pause before starting to delete the text.
-        timeoutId = setTimeout(() => setIsTyping(false), PAUSE_DURATION);
-      }
-    };
-
-    const handleDeletion = () => {
-      // If there's still text to delete, remove one character.
-      if (displayedText.length > 0) {
-        setDisplayedText(displayedText.slice(0, -1));
-        timeoutId = setTimeout(handleDeletion, BACKSPACE_SPEED);
-      } else {
-        // Once deletion is complete, switch back to typing mode and move to the next phrase.
-        setIsTyping(true);
-        setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
-      }
-    };
+    const currentPhrase = phrases[currentIndex];
 
     if (isTyping) {
-      handleTyping();
+      // Continue typing if the phrase is not complete.
+      if (displayedText.length < currentPhrase.length) {
+        timeoutId = setTimeout(() => {
+          setDisplayedText(current => current + currentPhrase[displayedText.length]);
+        }, typingSpeed);
+      } else {
+        // Pause before starting to delete the text.
+        timeoutId = setTimeout(() => {
+          setIsTyping(false);
+        }, pauseDuration);
+      }
     } else {
-      handleDeletion();
+      // Delete text one character at a time.
+      if (displayedText.length > 0) {
+        timeoutId = setTimeout(() => {
+          setDisplayedText(current => current.slice(0, -1));
+        }, deletionSpeed);
+      } else {
+        // Once deletion is complete, reset to typing mode with the next phrase.
+        setIsTyping(true);
+        setCurrentIndex(prevIndex => (prevIndex + 1) % phrases.length);
+      }
     }
 
     return () => clearTimeout(timeoutId);
-  }, [displayedText, isTyping, currentPhraseIndex]);
+  }, [displayedText, isTyping, currentIndex, phrases, typingSpeed, deletionSpeed, pauseDuration]);
+
+  return displayedText;
+}
+
+const Hero: React.FC = React.memo(() => {
+  const displayedText = useTypewriter(phrases, TYPING_SPEED, DELETION_SPEED, PAUSE_DURATION);
 
   return (
     <>

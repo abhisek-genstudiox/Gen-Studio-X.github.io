@@ -1,6 +1,5 @@
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import React from 'react';
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -8,42 +7,53 @@ const navLinks = [
   { to: '/managed-services', label: 'Managed Services' },
 ];
 
+type NavLinksProps = {
+  variant: 'desktop' | 'mobile';
+};
+
+const NavLinks: React.FC<NavLinksProps> = ({ variant }) => {
+  const baseStyle =
+    variant === 'desktop'
+      ? 'text-gray-300 hover:text-white text-sm font-medium transition-colors'
+      : 'block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700';
+
+  return (
+    <>
+      {navLinks.map(({ to, label }) => (
+        <Link key={to} to={to} className={baseStyle}>
+          {label}
+        </Link>
+      ))}
+    </>
+  );
+};
+
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen((prev) => !prev);
-  };
+  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-3">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0 ml-0">
-            <Link to="/" className="flex items-center" aria-label="Home">
-              <img 
-                src="/Black Logo GSX.png" 
-                alt="Gen Studio X Logo" 
+          <div className="flex-shrink-0">
+            <Link to="/" aria-label="Home">
+              <img
+                src="/Black Logo GSX.png"
+                alt="Gen Studio X Logo"
                 className="h-8 w-auto filter invert brightness-0"
               />
             </Link>
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
-              >
-                {label}
-              </Link>
-            ))}
+            <NavLinks variant="desktop" />
           </div>
 
-          {/* Get Template Button for Desktop */}
+          {/* Desktop Call-to-Action */}
           <div className="hidden md:block">
             <Link
               to="/template"
@@ -53,9 +63,10 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Toggle */}
           <div className="md:hidden">
             <button
+              type="button"
               onClick={toggleMobileMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               aria-label="Toggle menu"
@@ -77,25 +88,19 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* Mobile Navigation Menu */}
-      <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-black/90 backdrop-blur-sm">
-          {navLinks.map(({ to, label }) => (
+      {isMobileMenuOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-black/90 backdrop-blur-sm">
+            <NavLinks variant="mobile" />
             <Link
-              key={to}
-              to={to}
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
+              to="/template"
+              className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-800 hover:bg-gray-700"
             >
-              {label}
+              Get template
             </Link>
-          ))}
-          <Link
-            to="/template"
-            className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-800 hover:bg-gray-700"
-          >
-            Get template
-          </Link>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };
