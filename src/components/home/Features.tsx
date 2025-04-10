@@ -22,7 +22,7 @@ const Features: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="inline-block px-4 py-1.5 bg-zinc-800 rounded-full text-sm mb-6">
-            Features
+            How It Works
           </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             Explore features designed to<br />enhance your business operations
@@ -36,18 +36,18 @@ const Features: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard
             icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>}
-            title="Real-time data processing"
-            description="Handle and analyze data instantly, providing actionable insights without delays."
+            title="Consultation & Assessment"
+            description="We start by diving deep into your challenges and current workflows."
           />
           <FeatureCard
             icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>}
-            title="Smart automation"
-            description="Automate repetitive tasks, freeing up time and boosting productivity across your team."
+            title="Customized Strategy"
+            description="Our experts design a bespoke plan perfectly aligned with your goals."
           />
           <FeatureCard
             icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>}
-            title="Natural language understanding"
-            description="Understands and responds to human language, making interactions intuitive."
+            title="Expert Implementation"
+            description="Our tech and creative teams unite to bring your vision to life."
           />
           <FeatureCard
             icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>}
@@ -56,13 +56,13 @@ const Features: React.FC = () => {
           />
           <FeatureCard
             icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>}
-            title="Multi-platform integration"
+            title="Multi-platform Workflow"
             description="Connect with existing tools, ensuring smooth workflows and collaboration."
           />
           <FeatureCard
             icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>}
-            title="Continuous learning"
-            description="Our AI evolves with every interaction, becoming smarter over time."
+            title="Continuous Improvement"
+            description="We keep optimizing and fine-tuning to ensure lasting success."
           />
         </div>
       </div>

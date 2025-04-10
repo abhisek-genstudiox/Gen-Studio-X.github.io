@@ -19,18 +19,26 @@ const Enterprise: React.FC = () => {
     <section className="bg-black py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <div className="inline-block px-4 py-1.5 bg-zinc-800 rounded-full text-sm mb-6">
-            Enterprise
+          <div className="text-4xl font-medium tracking-tight sm:text-6xl mb-8
+            bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent
+            leading-[1.1] font-display">
+            Managed Services
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Scalable solutions that grow with<br />your business needs
-          </h2>
+          <p className="text-lg leading-8 text-gray-400/90 max-w-xl mx-auto whitespace-nowrap text-center">
+            Transforming your workflows into masterpieces with technical and creative genius
+          </p>
+        </div>
+
+        <div className="flex justify-center mb-8">
+          <div className="inline-block px-4 py-1.5 bg-zinc-800 rounded-full text-sm">
+            Our Expertise
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard
-            title="Scalable AI solutions"
-            description="Experience the enchanting magic of AI as it transforms data into insights."
+            title="Technical Expertise"
+            description="Leveraging cutting-edge tech to automate and streamline your operations"
           >
             <div className="space-y-4">
               <button className="w-full flex items-center justify-between bg-zinc-800 rounded-lg p-4 hover:bg-zinc-700">
@@ -64,8 +72,8 @@ const Enterprise: React.FC = () => {
           </FeatureCard>
 
           <FeatureCard
-            title="API & integrations"
-            description="Connect with different services to automate your product."
+            title="Creative Vision"
+            description="Crafting strategies and content that captivate and inspire"
           >
             <div className="relative h-48">
               <div className="absolute inset-0 flex items-center justify-center">
@@ -91,8 +99,8 @@ const Enterprise: React.FC = () => {
           </FeatureCard>
 
           <FeatureCard
-            title="Integrated workflow"
-            description="Enhance productivity with AI that connects your systems and automates complex workflows."
+            title="Innovative Solutions"
+            description="Merging technology and creativity to supercharge your processes"
           >
             <div className="space-y-4">
               <div className="flex flex-wrap gap-3">
