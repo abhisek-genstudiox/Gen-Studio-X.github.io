@@ -25,11 +25,31 @@ const HeroPic: React.FC = React.memo(() => {
   }, []);
 
   return (
-    <div className="relative -mt-32 pt-24 overflow-hidden">
+    <div className="relative overflow-hidden">
+      {/* Top gradient for smooth transition from Hero */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          height: '100vh',
+          background: 'linear-gradient(to bottom, black, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 60%, transparent 70%, transparent 100%)',
+          transform: 'translateY(-60%)'
+        }}
+      />
       <GridPatternOverlay />
       <AmbientLightEffects />
       <TopGradientOverlay />
-      <HeroVideoContent videoRef={videoRef} />
+      <div className="pt-16">
+        <HeroVideoContent videoRef={videoRef} />
+      </div>
+      {/* Bottom gradient for smooth transition to HowItWorks */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '100vh',
+          background: 'linear-gradient(to bottom, transparent, transparent 30%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.9) 80%, black 100%)',
+          transform: 'translateY(40%)'
+        }}
+      />
     </div>
   );
 });
@@ -113,7 +133,12 @@ const AmbientLightEffects: React.FC = () => (
 
 const TopGradientOverlay: React.FC = () => (
   <div
-    className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-transparent z-10 pointer-events-none h-64"
+    className="absolute top-0 left-0 right-0 pointer-events-none"
+    style={{
+      height: '100vh',
+      background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 20%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.7) 70%, black 100%)',
+      transform: 'translateY(-50%)'
+    }}
     aria-hidden="true"
   />
 );

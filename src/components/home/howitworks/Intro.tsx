@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Intro: React.FC = () => (
-  <section className="relative w-full py-24 px-4 md:px-8 bg-black/95">
+  <section className="relative w-full py-24 px-4 md:px-8 bg-gradient-to-b from-black to-transparent">
     <div className="max-w-7xl mx-auto text-center">
       <button className="px-4 py-1.5 mb-12 rounded-full bg-gray-800/80 text-gray-300 text-sm hover:bg-gray-700/80 transition-colors">
         Our Process

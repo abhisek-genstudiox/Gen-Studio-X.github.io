@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import Marquee from 'react-fast-marquee';
 
 interface Brand {
@@ -11,8 +11,7 @@ interface LogosProps {
   className?: string;
 }
 
-// Constant brand data (renamed to emphasize immutability)
-const BRANDS: Brand[] = [
+const brands: Brand[] = [
   { id: 1, name: 'OpenAI', image: '/brands/openAI.png' },
   { id: 2, name: 'Stability AI', image: '/brands/stabilityai.png' },
   { id: 3, name: 'MidJourney', image: '/brands/MidJourney.png' },
@@ -25,42 +24,46 @@ const BRANDS: Brand[] = [
   { id: 10, name: 'Kaling', image: '/brands/Kaling.png' },
 ];
 
-// Helper function for generating image class names
-const getBrandImageClasses = (brandName: string): string =>
-  `h-6 w-auto opacity-90 hover:opacity-100 transition-opacity ${
-    brandName === 'MidJourney' ? '' : 'brightness-0 invert'
-  }`;
+const Logos: React.FC<LogosProps> = React.memo(({ className }) => {
+  return (
+    <div className={`relative w-full py-24 px-4 md:px-8 bg-gradient-to-b from-transparent to-black ${className || ''}`}>
+      <div className="max-w-7xl mx-auto">
+        <div className="relative z-10">
+          <div className="mx-auto max-w-2xl lg:max-w-none">
+            <p className="text-center text-5xl font-semibold text-white mb-10">
+              Powered By Leading AI Technologies
+            </p>
 
-const Logos: React.FC<LogosProps> = memo(({ className = '' }) => (
-  <div className={`pt-8 pb-16 bg-black ${className}`}>
-    <div className="mx-auto max-w-7xl px-6 lg:px-8">
-      <div className="mx-auto max-w-2xl lg:max-w-none">
-        <p className="text-center text-5xl font-semibold text-white mb-10">
-          Powered By Leading AI Technologies
-        </p>
-        <Marquee
-          gradient
-          gradientColor="#000000"
-          gradientWidth={200}
-          speed={40}
-          direction="left"
-          className="overflow-hidden"
-        >
-          <div className="flex items-center space-x-24 pr-24">
-            {BRANDS.map((brand) => (
-              <div key={brand.id} className="flex items-center justify-center">
-                <img
-                  src={brand.image}
-                  alt={brand.name}
-                  className={getBrandImageClasses(brand.name)}
-                />
+            <Marquee
+              gradient={true}
+              gradientColor="#000000"
+              gradientWidth={200}
+              speed={40}
+              direction="left"
+              className="overflow-hidden"
+            >
+              <div className="flex items-center space-x-24 pr-24">
+                {brands.map((brand) => (
+                  <div
+                    key={brand.id}
+                    className="flex items-center justify-center"
+                  >
+                    <img
+                      src={brand.image}
+                      alt={brand.name}
+                      className={`h-6 w-auto opacity-90 hover:opacity-100 transition-opacity ${
+                        brand.name === 'MidJourney' ? '' : 'brightness-0 invert'
+                      }`}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            </Marquee>
           </div>
-        </Marquee>
+        </div>
       </div>
     </div>
-  </div>
-));
+  );
+});
 
 export default Logos;
