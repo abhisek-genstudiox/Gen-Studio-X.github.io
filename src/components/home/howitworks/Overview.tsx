@@ -1,16 +1,21 @@
 import React, { useRef, useState, useEffect, useCallback, ReactNode, memo } from "react";
 
 // --------------------
-// Static Data
+// Static Data & Interfaces
 // --------------------
-const ICON_COLORS = ["#1a1a1a", "#262626", "#333333", "#404040"];
-
 const SVG_ICONS = {
   sourcing: "/ourProcess/Icon 1 AI.png",
   book: "/ourProcess/Icon 2 Stroies.png",
   clapperboard: "/ourProcess/Icon 3 Films.png",
   chart: "/ourProcess/Icon 4 Ads.png",
 };
+
+const CARD_IMAGES = [
+  "/ourProcess/Card 1 AI agents.png",
+  "/ourProcess/Card 2 Scriptwriter.png",
+  "/ourProcess/Card 3 Gen AI models.png",
+  "/ourProcess/Card 4 Ads.png",
+];
 
 interface ProgressItem {
   key: string;
@@ -61,9 +66,6 @@ const progressItems: ProgressItem[] = [
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(Math.max(value, min), max);
 
-const snapToStep = (value: number, step: number): number =>
-  Math.round(value / step) * step;
-
 // --------------------
 // Components
 // --------------------
@@ -82,7 +84,6 @@ const ProgressIcon: React.FC<ProgressIconProps> = memo(
           active ? "bg-gray-900" : "bg-gray-800/80"
         }`}
       >
-        {/* Structural background layer */}
         <div className="absolute inset-0 rounded-xl" />
         <img src={icon as string} alt={title} className="w-12 h-12 object-contain" />
       </div>
@@ -102,10 +103,10 @@ const Overview: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const isTicking = useRef(false);
   const NUM_ICONS = progressItems.length;
-  const topOffset = 30; // Further reduced top offset
-  const bottomOffset = 30; // Further reduced bottom offset
+  const topOffset = 30; // Reduced top offset
+  const bottomOffset = 30; // Reduced bottom offset
 
-  // Scroll handler to update progress based on component position
+  // Modified scroll handler using continuous progress (without snapping)
   const handleScroll = useCallback((): void => {
     if (isTicking.current || !containerRef.current) return;
 
@@ -118,43 +119,38 @@ const Overview: React.FC = () => {
       if (componentHeight > 0) {
         const rawProgress = (viewportThreshold - rect.top) / componentHeight;
         const clampedProgress = clamp(rawProgress, 0, 1);
-        const step = 1 / (NUM_ICONS - 1);
-        const snappedProgress = snapToStep(clampedProgress, step);
-        setProgress(snappedProgress);
+        setProgress(clampedProgress);
       }
       isTicking.current = false;
     });
-  }, [NUM_ICONS]);
+  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
-    // Perform initial progress calculation when the component mounts
+    // Initial progress calculation
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
+
+  // Calculate step based on number of cards
+  const step = 1 / (CARD_IMAGES.length - 1);
+  const activeIndex = Math.floor(progress / step);
+  const remainder = (progress - activeIndex * step) / step;
 
   return (
     <div ref={containerRef} className="relative my-8">
       <div className="mt-8 flex gap-32 pl-32 pr-16">
         {/* Left Side: Progress Bar & Icons */}
         <div className="flex flex-col h-[550px] justify-between relative">
-          {/* Background Progress Bar */}
           <div
             className="absolute w-2 bg-gray-800/80 rounded-full"
             style={{
-              left: "calc(2rem - 1px)", // Align progress bar center with the icon circle's center (2rem = 32px; adjust by 1px)
+              left: "calc(2rem - 1px)", // Align with icon center
               top: topOffset,
               height: `calc(100% - ${topOffset + bottomOffset}px)`,
             }}
           >
-            <div
-              className="w-full rounded-full transition-all duration-200 ease-in-out absolute top-0"
-              style={{
-                height: `${progress * 100}%`,
-                background: `linear-gradient(180deg, ${ICON_COLORS[0]} 0%, ${ICON_COLORS[1]} 33.33%, ${ICON_COLORS[2]} 66.67%, ${ICON_COLORS[3]} 100%)`,
-                maxHeight: "100%",
-              }}
-            />
+            {/* You can keep your gradient progress bar here if needed */}
           </div>
 
           <div className="relative z-20 flex flex-col justify-between h-full">
@@ -177,13 +173,42 @@ const Overview: React.FC = () => {
         </div>
 
         {/* Right Side: Image Content */}
-        <div className="flex-1 pl-8 flex items-center justify-center h-[550px]">
-          <div className="w-full flex justify-center items-center">
-            <img
-              src="/xcqLmgZHjUz0IlUpZsoIysKb4.svg"
-              alt="Gen Studio X Process"
-              className="h-full object-contain"
-            />
+        <div className="flex-1 pl-8 flex items-center justify-center h-[550px] relative">
+          <div className="w-full h-full flex justify-center items-center relative">
+            {CARD_IMAGES.map((image, index) => {
+              // Only two images will have non-zero opacity:
+              // - The current image (activeIndex) fades out
+              // - The next image (activeIndex + 1) fades in
+              let opacity = 0;
+              let translateY = 0;
+              // Current active image
+              if (index === activeIndex) {
+                opacity = 1 - remainder;
+                translateY = 4 * remainder; // Adjust vertical translation if desired
+              }
+              // Next image
+              else if (index === activeIndex + 1) {
+                opacity = remainder;
+                translateY = 4 * (1 - remainder);
+              }
+              // All other images remain hidden
+              return (
+                <img
+                  key={image}
+                  src={image}
+                  alt={`Process Step ${index + 1}`}
+                  className="absolute transition-all duration-500 ease-in-out"
+                  style={{
+                    zIndex: index === activeIndex + 1 ? 10 : 0,
+                    width: '300px',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    opacity,
+                    transform: `translateY(${translateY}px)`,
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
