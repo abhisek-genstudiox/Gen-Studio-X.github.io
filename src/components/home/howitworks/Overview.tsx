@@ -1,4 +1,11 @@
-import React, { useRef, useState, useEffect, useCallback, ReactNode, memo } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+  memo,
+} from "react";
 
 // --------------------
 // Static Data & Interfaces
@@ -61,7 +68,7 @@ const progressItems: ProgressItem[] = [
 ];
 
 // --------------------
-// Helper Functions
+// Helper
 // --------------------
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(Math.max(value, min), max);
@@ -85,10 +92,16 @@ const ProgressIcon: React.FC<ProgressIconProps> = memo(
         }`}
       >
         <div className="absolute inset-0 rounded-xl" />
-        <img src={icon as string} alt={title} className="w-12 h-12 object-contain" />
+        <img
+          src={icon as string}
+          alt={title}
+          className="w-12 h-12 object-contain"
+        />
       </div>
       <div className="max-w-[35vw]">
-        <h3 className="font-semibold text-lg leading-tight text-white">{title}</h3>
+        <h3 className="font-semibold text-lg leading-tight text-white">
+          {title}
+        </h3>
         <p className="text-sm text-gray-400 mt-2 leading-relaxed pr-8">
           {description}
         </p>
@@ -98,21 +111,26 @@ const ProgressIcon: React.FC<ProgressIconProps> = memo(
 );
 ProgressIcon.displayName = "ProgressIcon";
 
+// --------------------
+// Main Component
+// --------------------
 const Overview: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const isTicking = useRef(false);
-  const NUM_ICONS = progressItems.length;
-  const topOffset = 30; // Reduced top offset
-  const bottomOffset = 30; // Reduced bottom offset
+  const scrollTimeout = useRef<number | null>(null);
 
-  // Modified scroll handler using continuous progress (without snapping)
+  const NUM_ICONS = progressItems.length;
+  const topOffset = 30;
+  const bottomOffset = 30;
+
   const handleScroll = useCallback((): void => {
     if (isTicking.current || !containerRef.current) return;
 
     isTicking.current = true;
     window.requestAnimationFrame(() => {
-      const rect = containerRef.current!.getBoundingClientRect();
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
       const viewportThreshold = window.innerHeight * (2 / 3);
       const componentHeight = rect.height;
 
@@ -125,86 +143,156 @@ const Overview: React.FC = () => {
     });
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    // Initial progress calculation
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+  const snapProgress = useCallback(() => {
+    const currentProgress = progress;
+    const thresholds = progressItems.map((item) => item.threshold);
+    const snappedProgress = thresholds.reduce((prev, curr) =>
+      Math.abs(curr - currentProgress) < Math.abs(prev - currentProgress)
+        ? curr
+        : prev
+    , thresholds[0]);
 
-  // Calculate step based on number of cards
+    if (Math.abs(snappedProgress - currentProgress) > 0.01) {
+      setProgress(snappedProgress);
+    }
+  }, [progress]);
+
+  useEffect(() => {
+    function onScroll() {
+      handleScroll();
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      scrollTimeout.current = window.setTimeout(() => {
+        snapProgress();
+      }, 200);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    };
+  }, [handleScroll, snapProgress]);
+
   const step = 1 / (CARD_IMAGES.length - 1);
   const activeIndex = Math.floor(progress / step);
   const remainder = (progress - activeIndex * step) / step;
 
+  const GRADIENT_COLORS = [
+    "#6366F1", // Indigo
+    "#EC4899", // Pink
+    "#F59E0B", // Amber
+    "#10B981", // Emerald
+  ];
+
   return (
     <div ref={containerRef} className="relative my-8">
       <div className="mt-8 flex gap-32 pl-32 pr-16">
-        {/* Left Side: Progress Bar & Icons */}
+        {/* Left: Progress Icons + Line */}
         <div className="flex flex-col h-[550px] justify-between relative">
           <div
-            className="absolute w-2 bg-gray-800/80 rounded-full"
+            className="absolute w-2 rounded-full overflow-hidden"
             style={{
-              left: "calc(2rem - 1px)", // Align with icon center
+              left: "calc(2rem - 1px)",
               top: topOffset,
               height: `calc(100% - ${topOffset + bottomOffset}px)`,
+              background: `linear-gradient(to bottom, ${GRADIENT_COLORS.join(
+                ", "
+              )})`,
+              maskImage: `linear-gradient(to bottom, black ${
+                progress * 100
+              }%, transparent ${progress * 100 + 1}%)`,
+              WebkitMaskImage: `linear-gradient(to bottom, black ${
+                progress * 100
+              }%, transparent ${progress * 100 + 1}%)`,
+              transition: "mask-image 0.5s, -webkit-mask-image 0.5s",
             }}
-          >
-            {/* You can keep your gradient progress bar here if needed */}
-          </div>
-
+          />
           <div className="relative z-20 flex flex-col justify-between h-full">
-            {progressItems.map((item, index) => {
-              const wrapperClass = `relative z-20 ${index === 0 ? "mt-2" : ""} ${
-                index === progressItems.length - 1 ? "mb-2" : ""
-              }`;
-              return (
-                <div key={item.key} className={wrapperClass}>
-                  <ProgressIcon
-                    icon={item.icon}
-                    title={item.title}
-                    description={item.description}
-                    active={progress >= item.threshold}
-                  />
-                </div>
-              );
-            })}
+            {progressItems.map((item, index) => (
+              <div
+                key={item.key}
+                className={`relative z-20 ${index === 0 ? "mt-2" : ""} ${
+                  index === progressItems.length - 1 ? "mb-2" : ""
+                }`}
+              >
+                <ProgressIcon
+                  icon={item.icon}
+                  title={item.title}
+                  description={item.description}
+                  active={progress >= item.threshold}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Right Side: Image Content */}
+        {/* Right: Card Shuffling */}
         <div className="flex-1 pl-8 flex items-center justify-center h-[550px] relative">
           <div className="w-full h-full flex justify-center items-center relative">
             {CARD_IMAGES.map((image, index) => {
-              // Only two images will have non-zero opacity:
-              // - The current image (activeIndex) fades out
-              // - The next image (activeIndex + 1) fades in
-              let opacity = 0;
-              let translateY = 0;
-              // Current active image
-              if (index === activeIndex) {
-                opacity = 1 - remainder;
-                translateY = 4 * remainder; // Adjust vertical translation if desired
+              let style: React.CSSProperties = {};
+              let zIndex = 0;
+
+              const blurStyle = {
+                filter: "blur(4px)",
+              };
+
+              if (index < activeIndex) {
+                style = {
+                  transform: "translateX(-100px) rotate(-20deg) scale(0.8)",
+                  opacity: 0,
+                  ...blurStyle,
+                  transition:
+                    "transform 0.5s ease-in-out, opacity 0.5s ease-in-out, filter 0.5s",
+                };
+                zIndex = 1;
+              } else if (index === activeIndex) {
+                const translateX = -100 * remainder;
+                const rotate = -20 * remainder;
+                const scale = 1 - 0.2 * remainder;
+                style = {
+                  transform: `translateX(${translateX}px) rotate(${rotate}deg) scale(${scale})`,
+                  opacity: 1 - remainder,
+                  transition:
+                    "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
+                };
+                zIndex = 9;
+              } else if (index === activeIndex + 1) {
+                const translateX = 100 * (1 - remainder);
+                const rotate = 20 * (1 - remainder);
+                const scale = 0.8 + 0.2 * remainder;
+                style = {
+                  transform: `translateX(${translateX}px) rotate(${rotate}deg) scale(${scale})`,
+                  opacity: remainder,
+                  transition:
+                    "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
+                };
+                zIndex = 10;
+              } else {
+                style = {
+                  transform: "translateX(100px) rotate(20deg) scale(0.8)",
+                  opacity: 0,
+                  ...blurStyle,
+                  transition:
+                    "transform 0.5s ease-in-out, opacity 0.5s ease-in-out, filter 0.5s",
+                };
+                zIndex = 8;
               }
-              // Next image
-              else if (index === activeIndex + 1) {
-                opacity = remainder;
-                translateY = 4 * (1 - remainder);
-              }
-              // All other images remain hidden
+
               return (
                 <img
                   key={image}
                   src={image}
                   alt={`Process Step ${index + 1}`}
-                  className="absolute transition-all duration-500 ease-in-out"
+                  className="absolute"
                   style={{
-                    zIndex: index === activeIndex + 1 ? 10 : 0,
-                    width: '300px',
-                    height: 'auto',
-                    objectFit: 'contain',
-                    opacity,
-                    transform: `translateY(${translateY}px)`,
+                    zIndex,
+                    width: "300px",
+                    height: "auto",
+                    objectFit: "contain",
+                    ...style,
                   }}
                 />
               );
