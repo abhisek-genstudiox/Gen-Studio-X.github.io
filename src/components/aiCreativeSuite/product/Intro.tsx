@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Intro: React.FC = () => (
-  <div className="bg-black py-12 sm:py-20">
+  <div className="bg-black py-16 sm:py-24 mt-16">
     <div className="mx-auto max-w-7xl px-8 lg:px-12">
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-4xl font-medium tracking-tight sm:text-6xl mb-8 
