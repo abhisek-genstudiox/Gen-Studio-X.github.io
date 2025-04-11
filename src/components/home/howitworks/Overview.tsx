@@ -6,114 +6,10 @@ import React, { useRef, useState, useEffect, useCallback, ReactNode, memo } from
 const ICON_COLORS = ["#1a1a1a", "#262626", "#333333", "#404040"];
 
 const SVG_ICONS = {
-  sourcing: (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-6 h-6 text-white relative z-10"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <circle 
-        cx="11" 
-        cy="11" 
-        r="8" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-      />
-      <line 
-        x1="21" 
-        y1="21" 
-        x2="16.65" 
-        y2="16.65" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-      />
-    </svg>
-  ),
-  book: (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-6 h-6 text-white relative z-10"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M4 19.5A2.5 2.5 0 016.5 17H20"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4 4.5A2.5 2.5 0 016.5 7H20v13H6.5A2.5 2.5 0 014 17.5V4.5z"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  ),
-  clapperboard: (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-6 h-6 text-white relative z-10"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M5 3h14l-2 4H7L5 3z"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  ),
-  chart: (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-6 h-6 text-white relative z-10"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <rect
-        x="4"
-        y="10"
-        width="4"
-        height="10"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <rect
-        x="10"
-        y="6"
-        width="4"
-        height="14"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <rect
-        x="16"
-        y="2"
-        width="4"
-        height="18"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  ),
+  sourcing: "/ourProcess/Icon 1 AI.png",
+  book: "/ourProcess/Icon 2 Stroies.png",
+  clapperboard: "/ourProcess/Icon 3 Films.png",
+  chart: "/ourProcess/Icon 4 Ads.png",
 };
 
 interface ProgressItem {
@@ -182,13 +78,13 @@ const ProgressIcon: React.FC<ProgressIconProps> = memo(
   ({ icon, title, description, active = false }) => (
     <div className="flex items-start gap-6">
       <div
-        className={`w-12 h-12 rounded-xl flex items-center justify-center relative z-10 flex-shrink-0 ${
+        className={`w-16 h-16 rounded-xl flex items-center justify-center relative z-10 flex-shrink-0 ${
           active ? "bg-gray-900" : "bg-gray-800/80"
         }`}
       >
         {/* Structural background layer */}
         <div className="absolute inset-0 rounded-xl" />
-        {icon}
+        <img src={icon as string} alt={title} className="w-12 h-12 object-contain" />
       </div>
       <div className="max-w-[35vw]">
         <h3 className="font-semibold text-lg leading-tight text-white">{title}</h3>
@@ -241,11 +137,12 @@ const Overview: React.FC = () => {
     <div ref={containerRef} className="relative my-8">
       <div className="mt-8 flex gap-32 pl-32 pr-16">
         {/* Left Side: Progress Bar & Icons */}
-        <div className="flex flex-col h-[550px] justify-between relative"> {/* Further reduced height */}
+        <div className="flex flex-col h-[550px] justify-between relative">
           {/* Background Progress Bar */}
           <div
-            className="absolute left-5 w-2 bg-gray-800/80 rounded-full"
+            className="absolute w-2 bg-gray-800/80 rounded-full"
             style={{
+              left: "calc(2rem - 1px)", // Align progress bar center with the icon circle's center (2rem = 32px; adjust by 1px)
               top: topOffset,
               height: `calc(100% - ${topOffset + bottomOffset}px)`,
             }}
@@ -280,7 +177,7 @@ const Overview: React.FC = () => {
         </div>
 
         {/* Right Side: Image Content */}
-        <div className="flex-1 pl-8 flex items-center justify-center h-[550px]"> {/* Further reduced height */}
+        <div className="flex-1 pl-8 flex items-center justify-center h-[550px]">
           <div className="w-full flex justify-center items-center">
             <img
               src="/xcqLmgZHjUz0IlUpZsoIysKb4.svg"
