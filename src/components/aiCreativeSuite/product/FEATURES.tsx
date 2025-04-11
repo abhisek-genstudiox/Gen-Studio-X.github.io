@@ -40,25 +40,25 @@ export const FEATURES: Feature[] = [
     icon: <Icons.Integration />,
     variant: 'chat',
     title: "Idea Generation",
-    description: "See what is trending in your niche",
+    description: "Our Al content strategist generates creative ideas tailored to your brand.",
     demo: (
       <div className="mt-4 space-y-4">
         <div className="bg-black/40 rounded-2xl p-4 space-y-3">
           <div className="flex items-start gap-2">
             <span className="text-xl text-orange-500">✨</span>
-            <span className="text-gray-300 text-base">See what is trending in your niche</span>
+            <span className="text-gray-300 text-base">Create a script</span>
           </div>
           <div className="flex gap-2">
             <button className="px-4 py-2 text-base bg-black/40 rounded-lg hover:bg-black/60 text-gray-300 transition-colors ring-1 ring-gray-800">
-              Generate Report
+            Modify the script
             </button>
             <button className="px-4 py-2 text-base bg-black/40 rounded-lg hover:bg-black/60 text-gray-300 transition-colors ring-1 ring-gray-800">
-              Suggest Another Trend
+            Blend my insight
             </button>
           </div>
         </div>
         <div className="flex items-center justify-between px-4 py-3 bg-black/40 rounded-xl text-base text-gray-400 hover:bg-black/60 transition-colors cursor-pointer">
-          <span>Get Trends For Another Niche</span>
+          <span>Get More Ideas</span>
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
