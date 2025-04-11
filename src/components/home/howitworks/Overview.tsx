@@ -7,9 +7,9 @@ import React, {
   memo,
 } from "react";
 
-// --------------------
-// Static Data & Interfaces
-// --------------------
+// -------------------------
+// Constants & Interfaces
+// -------------------------
 const SVG_ICONS = {
   sourcing: "/ourProcess/Icon 1 AI.png",
   book: "/ourProcess/Icon 2 Stroies.png",
@@ -24,7 +24,7 @@ const CARD_IMAGES = [
   "/ourProcess/Card 4 Ads.png",
 ];
 
-interface ProgressItem {
+export interface ProgressItem {
   key: string;
   icon: ReactNode;
   title: string;
@@ -67,15 +67,15 @@ const progressItems: ProgressItem[] = [
   },
 ];
 
-// --------------------
-// Helper
-// --------------------
+// -------------------------
+// Helper Function
+// -------------------------
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(Math.max(value, min), max);
 
-// --------------------
-// Components
-// --------------------
+// -------------------------
+// Progress Icon Component
+// -------------------------
 interface ProgressIconProps {
   icon: ReactNode;
   title: string;
@@ -111,62 +111,64 @@ const ProgressIcon: React.FC<ProgressIconProps> = memo(
 );
 ProgressIcon.displayName = "ProgressIcon";
 
-// --------------------
-// Main Component
-// --------------------
+// -------------------------
+// Main Overview Component
+// -------------------------
 const Overview: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const isTicking = useRef(false);
   const scrollTimeout = useRef<number | null>(null);
 
-  const NUM_ICONS = progressItems.length;
+  // Offsets for proper layout spacing
   const topOffset = 30;
   const bottomOffset = 30;
 
-  const handleScroll = useCallback((): void => {
+  /**
+   * Update the progress based on the container's bounding rectangle
+   * and the viewport threshold.
+   */
+  const handleScroll = useCallback(() => {
     if (isTicking.current || !containerRef.current) return;
 
     isTicking.current = true;
     window.requestAnimationFrame(() => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      const rect = containerRef.current!.getBoundingClientRect();
       const viewportThreshold = window.innerHeight * (2 / 3);
-      const componentHeight = rect.height;
-
-      if (componentHeight > 0) {
-        const rawProgress = (viewportThreshold - rect.top) / componentHeight;
-        const clampedProgress = clamp(rawProgress, 0, 1);
-        setProgress(clampedProgress);
-      }
+      const newProgress = clamp((viewportThreshold - rect.top) / rect.height, 0, 1);
+      setProgress(newProgress);
       isTicking.current = false;
     });
   }, []);
 
+  /**
+   * Snap the progress value to the nearest threshold defined
+   * in the progressItems for a smoother transition.
+   */
   const snapProgress = useCallback(() => {
     const currentProgress = progress;
     const thresholds = progressItems.map((item) => item.threshold);
-    const snappedProgress = thresholds.reduce((prev, curr) =>
-      Math.abs(curr - currentProgress) < Math.abs(prev - currentProgress)
-        ? curr
-        : prev
-    , thresholds[0]);
-
+    const snappedProgress = thresholds.reduce((closest, threshold) =>
+      Math.abs(threshold - currentProgress) < Math.abs(closest - currentProgress)
+        ? threshold
+        : closest,
+      thresholds[0]
+    );
     if (Math.abs(snappedProgress - currentProgress) > 0.01) {
       setProgress(snappedProgress);
     }
   }, [progress]);
 
+  // Setup scroll listener with debouncing
   useEffect(() => {
-    function onScroll() {
+    const onScroll = () => {
       handleScroll();
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-      scrollTimeout.current = window.setTimeout(() => {
-        snapProgress();
-      }, 200);
-    }
+      scrollTimeout.current = window.setTimeout(snapProgress, 200);
+    };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    // Initial calculation in case the component is already in view
     handleScroll();
 
     return () => {
@@ -175,21 +177,18 @@ const Overview: React.FC = () => {
     };
   }, [handleScroll, snapProgress]);
 
+  // Calculate the active card index and the remaining progress for the animation
   const step = 1 / (CARD_IMAGES.length - 1);
   const activeIndex = Math.floor(progress / step);
   const remainder = (progress - activeIndex * step) / step;
 
-  const GRADIENT_COLORS = [
-    "#6366F1", // Indigo
-    "#EC4899", // Pink
-    "#F59E0B", // Amber
-    "#10B981", // Emerald
-  ];
+  const GRADIENT_COLORS = ["#6366F1", "#EC4899", "#F59E0B", "#10B981"];
+  const progressPercentage = progress * 100; // for the maskImage percentage
 
   return (
     <div ref={containerRef} className="relative my-8">
       <div className="mt-8 flex gap-32 pl-32 pr-16">
-        {/* Left: Progress Icons + Line */}
+        {/* Left: Progress Icons + Animated Progress Line */}
         <div className="flex flex-col h-[550px] justify-between relative">
           <div
             className="absolute w-2 rounded-full overflow-hidden"
@@ -197,15 +196,9 @@ const Overview: React.FC = () => {
               left: "calc(2rem - 1px)",
               top: topOffset,
               height: `calc(100% - ${topOffset + bottomOffset}px)`,
-              background: `linear-gradient(to bottom, ${GRADIENT_COLORS.join(
-                ", "
-              )})`,
-              maskImage: `linear-gradient(to bottom, black ${
-                progress * 100
-              }%, transparent ${progress * 100 + 1}%)`,
-              WebkitMaskImage: `linear-gradient(to bottom, black ${
-                progress * 100
-              }%, transparent ${progress * 100 + 1}%)`,
+              background: `linear-gradient(to bottom, ${GRADIENT_COLORS.join(", ")})`,
+              maskImage: `linear-gradient(to bottom, black ${progressPercentage}%, transparent ${progressPercentage + 1}%)`,
+              WebkitMaskImage: `linear-gradient(to bottom, black ${progressPercentage}%, transparent ${progressPercentage + 1}%)`,
               transition: "mask-image 0.5s, -webkit-mask-image 0.5s",
             }}
           />
@@ -228,18 +221,16 @@ const Overview: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Card Shuffling */}
+        {/* Right: Card Shuffling Animation */}
         <div className="flex-1 pl-8 flex items-center justify-center h-[550px] relative">
           <div className="w-full h-full flex justify-center items-center relative">
             {CARD_IMAGES.map((image, index) => {
               let style: React.CSSProperties = {};
+              const blurStyle = { filter: "blur(4px)" };
               let zIndex = 0;
 
-              const blurStyle = {
-                filter: "blur(4px)",
-              };
-
               if (index < activeIndex) {
+                // Previous cards (fading out)
                 style = {
                   transform: "translateX(-100px) rotate(-20deg) scale(0.8)",
                   opacity: 0,
@@ -249,28 +240,25 @@ const Overview: React.FC = () => {
                 };
                 zIndex = 1;
               } else if (index === activeIndex) {
-                const translateX = -100 * remainder;
-                const rotate = -20 * remainder;
-                const scale = 1 - 0.2 * remainder;
+                // Currently active card with transition applied
                 style = {
-                  transform: `translateX(${translateX}px) rotate(${rotate}deg) scale(${scale})`,
+                  transform: `translateX(${-100 * remainder}px) rotate(${-20 * remainder}deg) scale(${1 -
+                    0.2 * remainder})`,
                   opacity: 1 - remainder,
-                  transition:
-                    "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
+                  transition: "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
                 };
                 zIndex = 9;
               } else if (index === activeIndex + 1) {
-                const translateX = 100 * (1 - remainder);
-                const rotate = 20 * (1 - remainder);
-                const scale = 0.8 + 0.2 * remainder;
+                // The next card blending in
                 style = {
-                  transform: `translateX(${translateX}px) rotate(${rotate}deg) scale(${scale})`,
+                  transform: `translateX(${100 * (1 - remainder)}px) rotate(${20 *
+                    (1 - remainder)}deg) scale(${0.8 + 0.2 * remainder})`,
                   opacity: remainder,
-                  transition:
-                    "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
+                  transition: "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
                 };
                 zIndex = 10;
               } else {
+                // Remaining cards (hidden and blurred)
                 style = {
                   transform: "translateX(100px) rotate(20deg) scale(0.8)",
                   opacity: 0,
