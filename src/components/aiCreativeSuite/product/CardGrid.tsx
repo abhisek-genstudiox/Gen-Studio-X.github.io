@@ -3,7 +3,7 @@ import Card from './Card';
 import { FEATURES } from './FEATURES';
 
 const CardGrid: React.FC = () => (
-  <div className="bg-black py-16 sm:py-24">
+  <div className="bg-black pt-4 pb-16 sm:py-24">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto px-8 lg:px-12">
       {FEATURES.map((feature, index) => (
         <Card key={index} variant={feature.variant}>
